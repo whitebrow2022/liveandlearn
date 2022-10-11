@@ -1,0 +1,4 @@
+include ':app'
+include ':sharedlib_name'
+project(':sharedlib_name').projectDir = new File(settingsDir, '../../../android/sharedlib_name')
+rootProject.name = "SharedlibNameApp"

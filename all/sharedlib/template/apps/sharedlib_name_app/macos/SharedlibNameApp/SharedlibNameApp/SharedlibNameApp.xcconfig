@@ -1,0 +1,14 @@
+//
+//  SharedlibNameApp.xcconfig
+//  SharedlibNameApp
+//
+//  Created by %username% on %date%.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "SharedlibNameCommon.xcconfig"
+
+SHAREDLIB_NAME_FRAMEWORK_INCLUDE_PATH = ../../../../macos/SharedlibName/SharedlibName
+SHAREDLIB_NAME_FRAMEWORK_PATH = $(TARGET_BUILD_DIR)/SharedlibName.framework/Versions/A/SharedlibName

@@ -1,0 +1,17 @@
+{
+  "name": "generate_shared_library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "detect-file-encoding-and-language": "^2.1.0",
+    "humps": "^2.0.1",
+    "inquirer": "^8.1.2",
+    "moment": "^2.29.1"
+  }
+}

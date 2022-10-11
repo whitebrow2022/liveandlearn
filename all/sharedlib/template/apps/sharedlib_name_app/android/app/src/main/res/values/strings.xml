@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SharedlibNameApp</string>
+    <string name="button_text_name">Click Me</string>
+</resources>
