@@ -6,7 +6,7 @@ bash_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 repo_dir="${bash_dir}/../.."
 
-gn="${repo_dir}/tools/gn/mac/gn"
+gn="${repo_dir}/tools/gn/win/gn"
 out_dir="${bash_dir}/out"
 gn_args="is_debug=true is_official_build=false"
 
