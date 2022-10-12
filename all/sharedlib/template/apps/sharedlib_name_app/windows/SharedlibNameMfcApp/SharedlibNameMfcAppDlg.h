@@ -13,7 +13,8 @@
 class CSharedlibNameMfcAppDlg : public CDialogEx {
   // Construction
  public:
-  CSharedlibNameMfcAppDlg(CWnd* pParent = NULL);  // standard constructor
+  explicit CSharedlibNameMfcAppDlg(
+      CWnd* pParent = NULL);  // standard constructor
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
@@ -21,7 +22,7 @@ class CSharedlibNameMfcAppDlg : public CDialogEx {
 #endif
 
  protected:
-  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+  void DoDataExchange(CDataExchange* pDX) override;  // DDX/DDV support
 
   // Implementation
  protected:
@@ -29,7 +30,7 @@ class CSharedlibNameMfcAppDlg : public CDialogEx {
   CButton version_;
 
   // Generated message map functions
-  virtual BOOL OnInitDialog();
+  BOOL OnInitDialog() override;
   afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
   afx_msg void OnPaint();
   afx_msg HCURSOR OnQueryDragIcon();

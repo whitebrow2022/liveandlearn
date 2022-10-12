@@ -1,3 +1,9 @@
+// Created by %username% on %date%.
+//
+// Copyright (c) %year% The %SharedlibName% Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "sharedlib_name_frame.h"
 
 #include "resource.h"
@@ -57,7 +63,7 @@ LRESULT SharedlibNameFrame::HandleMessage(UINT msg, WPARAM w_param,
   return DuiWindow::HandleMessage(msg, w_param, l_param);
 }
 bool SharedlibNameFrame::OnCommand(WPARAM w_param, LPARAM l_param,
-                                   LRESULT& l_res) {
+                                   LRESULT& l_res) {  // NOLINT
   switch (LOWORD(w_param)) {
     case ID_HELP_ABOUT: {
       std::wstring version = Utf8ToUtf16(SHAREDLIB_NAME::GetVersion());

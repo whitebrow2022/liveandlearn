@@ -1,6 +1,13 @@
+// Created by %username% on %date%.
+//
+// Copyright (c) %year% The %SharedlibName% Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #include "sharedlib_name_rich_edit_window.h"
 
 #include <Richedit.h>
+
 #include <string>
 
 SharedlibNameRichEditWindow::SharedlibNameRichEditWindow() {}
@@ -22,6 +29,7 @@ LPCTSTR SharedlibNameRichEditWindow::GetSuperClassName() const {
   }
   return rich_edit_class_name.c_str();
 }
-LRESULT SharedlibNameRichEditWindow::HandleMessage(UINT msg, WPARAM w_param, LPARAM l_param) {
+LRESULT SharedlibNameRichEditWindow::HandleMessage(UINT msg, WPARAM w_param,
+                                                   LPARAM l_param) {
   return DuiWindow::HandleMessage(msg, w_param, l_param);
 }

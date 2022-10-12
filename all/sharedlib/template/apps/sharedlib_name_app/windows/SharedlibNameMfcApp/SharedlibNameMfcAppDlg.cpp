@@ -1,3 +1,8 @@
+// Created by %username% on %date%.
+//
+// Copyright (c) %year% The %SharedlibName% Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 // SharedlibNameMfcAppDlg.cpp : implementation file
 //
@@ -25,7 +30,7 @@ class CAboutDlg : public CDialogEx {
 
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
-  enum { IDD = IDD_ABOUTBOX };
+  enum {IDD = IDD_ABOUTBOX};
 #endif
 
  protected:

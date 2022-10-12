@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+#
+# To enable this hook, rename this file to "pre-commit".
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+  against=HEAD
+else
+  # Initial commit: diff against an empty tree object
+  against=$(git hash-object -t tree /dev/null)
+fi
+
+# Redirect output to stderr.
+exec 1>&2
+
+bash_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+repo_dir="${bash_dir}/../.."
+
+if [[ "$OSTYPE" == "msys" ]]; then
+  python2_path=/c/Python27/python.exe
+else
+  python2_path=python2
+fi
+
+# check cpplint
+# cpplint_cmd=${repo_dir}/liveandlearn/tools/cpplint/dist/cpplint
+cpplint_script=${repo_dir}/tools/cpplint/src/cpplint.py
+cpplint_cmd="${python2_path} ${cpplint_script}"
+
+sum=0
+cpplint_filters='-build/include,-whitespace/comments,-whitespace/indent'
+for fullfile in $(git diff-index --name-status $against -- | grep -E '\.(h|cc|cpp)$' | awk '{print $2}'); do
+  #echo ${file}
+  if [[ ${fullfile} == *"/microsoft_cpp/"* ]]; then
+    continue
+  fi
+  if [[ ${fullfile} == *"/macos/"*.h ]]; then
+    continue
+  fi
+  if [[ ${fullfile} == *"/ios/"*.h ]]; then
+    continue
+  fi 
+
+  filename=$(basename -- "${fullfile}")
+  if [[ "${filename}" == "resource.h" ]]; then
+    continue
+  fi
+  if [[ "${filename}" == "stdafx.h" ]]; then
+    continue
+  fi
+  extension="${filename##*.}"
+  if [[ "${extension}" == "h" || "${extension}" == "cc" ]]; then
+    # echo ${fullfile}
+    # use python2 script
+    # ${python2_path} ${cpplint_script} --linelength=80 --filter="${cpplint_filters}" ${fullfile}
+    # or use exe 
+    ${cpplint_cmd} --linelength=80 --filter="${cpplint_filters}" ${fullfile}
+  fi
+  sum=$(expr ${sum} + $?)
+done
+
+if [[ ${sum} -eq 0 ]]; then
+  exit 0
+else
+  exit 1
+fi
