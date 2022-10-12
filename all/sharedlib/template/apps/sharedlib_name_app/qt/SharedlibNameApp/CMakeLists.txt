@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 
 set(project_name sharedlib_name_app)
 
-project(${project_name} LANGUAGES CXX)
+project(${project_name} VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -55,24 +55,47 @@ add_executable(${project_name}
   ${QM_FILES}
   ${project_name}.qrc
 )
-set_property(TARGET ${project_name} PROPERTY AUTOUIC ON)
-set_property(TARGET ${project_name} PROPERTY AUTOMOC ON)
-set_property(TARGET ${project_name} PROPERTY AUTORCC ON)
+
+set_target_properties(${project_name} PROPERTIES 
+  AUTOUIC ON
+  AUTOMOC ON
+  AUTORCC ON
+)
+
+target_link_libraries(${project_name} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${common_name})
+
+set_target_properties(${project_name} PROPERTIES
+    MACOSX_BUNDLE_GUI_IDENTIFIER whitebrow.sharedlib_name.com
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+if(WINDOWS)
+  list(APPEND qt_dll_lists "Qt5Core" "Qt5Gui" "Qt5Widgets" "Qt5WinExtras" 
+      "Qt5Concurrent" 
+      "Qt5Network" 
+      "Qt5WebEngineCore" "Qt5WebEngine" "Qt5WebEngineWidgets" "Qt5Quick" "Qt5QuickWidgets" "Qt5PrintSupport" "Qt5Positioning" "Qt5WebChannel" "Qt5Qml" "Qt5QmlModels"
+      )
+  
+  # Debug configuration, copy qt runtime to bin
+  if ("$ENV{APPVEYOR}" STREQUAL "")
+    foreach(qt_dll_name IN LISTS qt_dll_lists)
+      file(COPY ${QT_MSVC_DIR}/bin/${qt_dll_name}d.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
+    endforeach()
+    file(COPY "${QT_MSVC_DIR}/plugins/platforms/qwindowsd.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/platforms/")
+    file(COPY "${QT_MSVC_DIR}/bin/QtWebEngineProcessd.exe" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/")
+    file(COPY "${QT_MSVC_DIR}/resources/icudtl.dat" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")
+    file(COPY "${QT_MSVC_DIR}/resources/qtwebengine_resources.pak" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")
+    file(COPY "${QT_MSVC_DIR}/translations/qtwebengine_locales" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/translations/")
+  endif()
+endif()
 
 if(WIN32)
-  find_package(QT NAMES Qt6 Qt5 COMPONENTS WinExtras REQUIRED)
-  find_package(Qt${QT_VERSION_MAJOR} COMPONENTS WinExtras REQUIRED)
-  set(EXTRAS_LIBS Qt${QT_VERSION_MAJOR}::WinExtras)
-endif()
-target_link_libraries(${project_name} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${EXTRAS_LIBS} ${common_name})
+  set_target_properties(${project_name} PROPERTIES 
+    VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${QT_MSVC_DIR}/bin;${QT_MSVC_DIR}/plugins;${QT_MSVC_DIR}/translations;${QT_MSVC_DIR}/resources"
+    )
 
-if(MSVC)
-  list(APPEND qt_dll_lists "Qt5Core" "Qt5Gui" "Qt5Widgets" "Qt5WinExtras")
-  foreach(qt_dll_name IN LISTS qt_dll_lists)
-    file(COPY ${QT_DLL_DIR}/${qt_dll_name}d.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-  endforeach()
-  foreach(qt_dll_name IN LISTS qt_dll_lists)
-    file(COPY ${QT_DLL_DIR}/${qt_dll_name}.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Release")
-  endforeach()
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${project_name})
+  set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${project_name})
 endif()

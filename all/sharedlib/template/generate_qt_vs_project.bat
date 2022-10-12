@@ -11,9 +11,9 @@ rem %1-%9 refer to command line arguments after the batch file name. %0 refers t
 set batch_file=%0
 
 echo Generate sharedlib_name_app
-set qt_msvc_path="C:\Qt\Qt5.12.11\5.12.11\msvc2015_64"
+set qt_msvc_path="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
 set vs_qt_dir=%bat_dir%\build\windows_qt\apps\sharedlib_name_app
-cmake -S "%bat_dir%\apps\sharedlib_name_app\qt\SharedlibNameApp" -B "%vs_qt_dir%" -G "Visual Studio 17 2022" -A x64 -T v143 -DWINDOWS:BOOL=ON -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_DLL_DIR="%qt_msvc_path%\bin"
+cmake -S "%bat_dir%\apps\sharedlib_name_app\qt\SharedlibNameApp" -B "%vs_qt_dir%" -G "Visual Studio 17 2022" -A x64 -T v143 -DWINDOWS:BOOL=ON -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_MSVC_DIR="%qt_msvc_path%" 
 set cmake_generate_err=%ERRORLEVEL%
 if %cmake_generate_err% NEQ 0 (
   exit /b %cmake_generate_err%
