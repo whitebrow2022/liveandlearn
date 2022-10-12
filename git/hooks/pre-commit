@@ -37,7 +37,16 @@ sum=0
 cpplint_filters='-build/include,-whitespace/comments,-whitespace/indent'
 for fullfile in $(git diff-index --name-status $against -- | grep -E '\.(h|cc|cpp)$' | awk '{print $2}'); do
   #echo ${file}
+  if [[ ${fullfile} == *"/.git/"* ]]; then
+    continue
+  fi
+  if [[ ${fullfile} == *"/node_modules/"* ]]; then
+    continue
+  fi
   if [[ ${fullfile} == *"/microsoft_cpp/"* ]]; then
+    continue
+  fi
+  if [[ ${fullfile} == *"/build/"* ]]; then
     continue
   fi
   if [[ ${fullfile} == *"/macos/"*.h ]]; then

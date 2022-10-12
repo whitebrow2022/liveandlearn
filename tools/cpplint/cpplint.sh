@@ -31,6 +31,9 @@ for fullfile in $(find ${cppcode_dir} -type f); do
   if [[ ${fullfile} == *"/microsoft_cpp/"* ]]; then
     continue
   fi
+  if [[ ${fullfile} == *"/build/"* ]]; then
+    continue
+  fi
   if [[ ${fullfile} == *"/macos/"*.h ]]; then
     continue
   fi
