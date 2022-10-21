@@ -172,7 +172,12 @@ OPENCV_WRAPPER_API bool ConvertVideoToMp4(const char* src_file_path,
   cv::Size video_sz(width, height);
   double fps = cap.get(CV_CAP_PROP_FPS);
 
+#if defined(_WIN32)
   int fourcc = cv::VideoWriter::fourcc('M', 'P', '4', 'V');
+#else
+  // TODO: need to fix 'mp4v'
+  int fourcc = cv::VideoWriter::fourcc('M', 'J', 'P', 'G');
+#endif
   cv::VideoWriter output_video;
   if (output_video.open(dest_file_path, fourcc, fps, video_sz)) {
     // cap.get(CV_CAP_PROP_FRAME_COUNT) contains the number of frames in the
