@@ -14,6 +14,8 @@ class OpencvWrapperFrame;
 }
 QT_END_NAMESPACE
 
+class QMediaPlayer;
+class QVideoWidget;
 class OpencvWrapperFrame : public QMainWindow {
   Q_OBJECT
 
@@ -22,10 +24,21 @@ class OpencvWrapperFrame : public QMainWindow {
   ~OpencvWrapperFrame();
 
  private slots:
-  void PopWindow();
+  void FirstImage();
+  void ToImages();
+  void ToMp4();
   void Exit();
   void About();
 
  private:
+  std::string GetVideoPath() const;
+
+  void InitMediaPlayer();
+  void PlayVideo(const QString &video_path);
+
+ private:
   Ui::OpencvWrapperFrame *ui_;
+
+  QMediaPlayer *player_{nullptr};
+  QVideoWidget *video_wgt_{nullptr};
 };

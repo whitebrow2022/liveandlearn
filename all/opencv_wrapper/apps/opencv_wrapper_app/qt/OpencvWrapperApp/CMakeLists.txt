@@ -30,12 +30,13 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/../../../../cmake/opencv_wrapper.cmake)
 
 message(STATUS "CMAKE_PREFIX_PATH is ${CMAKE_PREFIX_PATH}")
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets LinguistTools REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets LinguistTools REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Multimedia MultimediaWidgets LinguistTools REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Multimedia MultimediaWidgets LinguistTools REQUIRED)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../.. ${CMAKE_CURRENT_BINARY_DIR}/out)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../include)
+include_directories(${})
 
 set(TS_FILES opencv_wrapper_app_zh.ts)
 
@@ -64,7 +65,12 @@ set_target_properties(${project_name} PROPERTIES
   AUTORCC ON
 )
 
-target_link_libraries(${project_name} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${common_name})
+target_link_libraries(${project_name} PRIVATE 
+  Qt${QT_VERSION_MAJOR}::Widgets 
+  Qt${QT_VERSION_MAJOR}::Multimedia
+  Qt${QT_VERSION_MAJOR}::MultimediaWidgets 
+  ${common_name}
+  )
 
 set_target_properties(${project_name} PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER whitebrow.opencv_wrapper.com
@@ -79,6 +85,7 @@ if(WINDOWS)
       "Qt5Concurrent" 
       "Qt5Network" 
       "Qt5WebEngineCore" "Qt5WebEngine" "Qt5WebEngineWidgets" "Qt5Quick" "Qt5QuickWidgets" "Qt5PrintSupport" "Qt5Positioning" "Qt5WebChannel" "Qt5Qml" "Qt5QmlModels"
+      "Qt5Multimedia" "Qt5MultimediaWidgets"
       )
   
   # Debug configuration, copy qt runtime to bin
@@ -87,6 +94,9 @@ if(WINDOWS)
       file(COPY ${QT_MSVC_DIR}/bin/${qt_dll_name}d.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
     endforeach()
     file(COPY "${QT_MSVC_DIR}/plugins/platforms/qwindowsd.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/platforms/")
+    file(COPY "${QT_MSVC_DIR}/plugins/mediaservice/dsengined.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/mediaservice/")
+    file(COPY "${QT_MSVC_DIR}/plugins/mediaservice/qtmedia_audioengined.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/mediaservice/")
+    file(COPY "${QT_MSVC_DIR}/plugins/mediaservice/wmfengined.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/mediaservice/")
     file(COPY "${QT_MSVC_DIR}/bin/QtWebEngineProcessd.exe" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/")
     file(COPY "${QT_MSVC_DIR}/resources/icudtl.dat" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")
     file(COPY "${QT_MSVC_DIR}/resources/qtwebengine_resources.pak" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")

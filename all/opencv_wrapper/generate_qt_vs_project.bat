@@ -13,7 +13,7 @@ set batch_file=%0
 echo Generate opencv_wrapper_app
 set qt_msvc_path="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
 set vs_qt_dir=%bat_dir%\build\windows_qt\apps\opencv_wrapper_app
-cmake -S "%bat_dir%\apps\opencv_wrapper_app\qt\OpencvWrapperApp" -B "%vs_qt_dir%" -G "Visual Studio 17 2022" -A x64 -T v143 -DWINDOWS:BOOL=ON -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_MSVC_DIR="%qt_msvc_path%" 
+cmake -S "%bat_dir%\apps\opencv_wrapper_app\qt\OpencvWrapperApp" -B "%vs_qt_dir%" -G "Visual Studio 17 2022" -A x64 -T v143 -DWINDOWS:BOOL=ON -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_MSVC_DIR="%qt_msvc_path%" -DBUILD_opencv_dnn=OFF -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_opencv_apps=OFF -DBUILD_PERF_TESTS=OFF
 set cmake_generate_err=%ERRORLEVEL%
 if %cmake_generate_err% NEQ 0 (
   exit /b %cmake_generate_err%

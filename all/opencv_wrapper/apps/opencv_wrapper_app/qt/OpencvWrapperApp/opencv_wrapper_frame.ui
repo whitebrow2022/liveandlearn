@@ -16,7 +16,20 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTextEdit" name="textEdit"/>
+     <widget class="QLabel" name="imageHolder">
+      <property name="text">
+       <string/>
+      </property>
+      <layout class="QVBoxLayout" name="imageHolderLayout">
+       <item>
+        <widget class="QLabel" name="videoDuration">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -26,14 +39,16 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menuVideo">
     <property name="title">
-     <string>File</string>
+     <string>Video</string>
     </property>
-    <addaction name="actionPop"/>
+    <addaction name="actionFirstImage"/>
+    <addaction name="actionToImages"/>
+    <addaction name="actionToMp4"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -43,7 +58,7 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <addaction name="menuFile"/>
+   <addaction name="menuVideo"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -53,22 +68,20 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionPop"/>
+   <addaction name="actionFirstImage"/>
    <addaction name="separator"/>
    <addaction name="actionAbout"/>
    <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionPop">
+  <action name="actionFirstImage">
    <property name="icon">
-    <iconset resource="opencv_wrapper_app.qrc">
-     <normaloff>:/images/pop.png</normaloff>
-     :/images/pop.png
-    </iconset>
+    <iconset>
+     <normaloff>:/images/pop.png</normaloff>:/images/pop.png</iconset>
    </property>
    <property name="text">
-    <string>Pop</string>
+    <string>FirstFrame</string>
    </property>
    <property name="toolTip">
     <string>Pop a window</string>
@@ -79,10 +92,8 @@
   </action>
   <action name="actionExit">
    <property name="icon">
-    <iconset resource="opencv_wrapper_app.qrc">
-     <normaloff>:/images/exit.png</normaloff>
-     :/images/exit.png
-    </iconset>
+    <iconset>
+     <normaloff>:/images/exit.png</normaloff>:/images/exit.png</iconset>
    </property>
    <property name="text">
     <string>Exit</string>
@@ -90,21 +101,27 @@
    <property name="toolTip">
     <string>Exit opencv_wrapper_app</string>
    </property>
-   <property name="shortcut">
-   </property>
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="opencv_wrapper_app.qrc">
-     <normaloff>:/images/info.png</normaloff>
-     :/images/info.png
-    </iconset>
+    <iconset>
+     <normaloff>:/images/info.png</normaloff>:/images/info.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
    </property>
    <property name="toolTip">
     <string>About opencv_wrapper_app</string>
+   </property>
+  </action>
+  <action name="actionToImages">
+   <property name="text">
+    <string>ToImages</string>
+   </property>
+  </action>
+  <action name="actionToMp4">
+   <property name="text">
+    <string>ToMp4</string>
    </property>
   </action>
  </widget>
