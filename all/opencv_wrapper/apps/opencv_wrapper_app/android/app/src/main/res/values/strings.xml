@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">OpencvWrapperApp</string>
+    <string name="button_text_name">Click Me</string>
+</resources>

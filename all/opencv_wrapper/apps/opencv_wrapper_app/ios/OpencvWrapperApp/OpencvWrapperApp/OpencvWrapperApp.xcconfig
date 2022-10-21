@@ -1,0 +1,14 @@
+//
+//  OpencvWrapperApp.xcconfig
+//  OpencvWrapperApp
+//
+//  Created by liangxu on 2022/10/21.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "OpencvWrapperCommon.xcconfig"
+
+OPENCV_WRAPPER_FRAMEWORK_INCLUDE_PATH = ../../../../ios/OpencvWrapper/OpencvWrapper
+OPENCV_WRAPPER_FRAMEWORK_PATH = $(TARGET_BUILD_DIR)/OpencvWrapper.framework/OpencvWrapper

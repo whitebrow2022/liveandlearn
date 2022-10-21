@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D57039A1278A8B15005868BA /* OpencvWrapperAppBuild.h in Headers */ = {isa = PBXBuildFile; fileRef = D57039A0278A8B15005868BA /* OpencvWrapperAppBuild.h */; };
+		D57039A3278A8B15005868BA /* OpencvWrapperAppBuild.m in Sources */ = {isa = PBXBuildFile; fileRef = D57039A2278A8B15005868BA /* OpencvWrapperAppBuild.m */; };
+		D57039A8278A8B24005868BA /* OpencvWrapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D57039A7278A8B24005868BA /* OpencvWrapper.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		D5F9D14826C113780028685F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F9D14726C113780028685F /* AppDelegate.m */; };
+		D5F9D14B26C113780028685F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F9D14A26C113780028685F /* ViewController.m */; };
+		D5F9D14D26C113790028685F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5F9D14C26C113790028685F /* Assets.xcassets */; };
+		D5F9D15026C113790028685F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D5F9D14E26C113790028685F /* Main.storyboard */; };
+		D5F9D15326C113790028685F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D5F9D15226C113790028685F /* main.m */; };
+		D5F9D1AD26C17F5B0028685F /* OpencvWrapperApp.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D5F9D1AC26C17F5B0028685F /* OpencvWrapperApp.xcconfig */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D57039AB278A8B62005868BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D5F9D13B26C113780028685F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D570399D278A8B15005868BA;
+			remoteInfo = OpencvWrapperAppBuild;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D570399E278A8B15005868BA /* libOpencvWrapperAppBuild.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libOpencvWrapperAppBuild.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57039A0278A8B15005868BA /* OpencvWrapperAppBuild.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpencvWrapperAppBuild.h; sourceTree = "<group>"; };
+		D57039A2278A8B15005868BA /* OpencvWrapperAppBuild.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OpencvWrapperAppBuild.m; sourceTree = "<group>"; };
+		D57039A7278A8B24005868BA /* OpencvWrapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = OpencvWrapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5F9D14326C113780028685F /* OpencvWrapperApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OpencvWrapperApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5F9D14626C113780028685F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		D5F9D14726C113780028685F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D5F9D14926C113780028685F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		D5F9D14A26C113780028685F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		D5F9D14C26C113790028685F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D5F9D14F26C113790028685F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		D5F9D15126C113790028685F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D5F9D15226C113790028685F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D5F9D15426C113790028685F /* OpencvWrapperApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpencvWrapperApp.entitlements; sourceTree = "<group>"; };
+		D5F9D1AC26C17F5B0028685F /* OpencvWrapperApp.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = OpencvWrapperApp.xcconfig; path = OpencvWrapperApp/OpencvWrapperApp.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D570399C278A8B15005868BA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D57039A8278A8B24005868BA /* OpencvWrapper.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5F9D14026C113780028685F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D570399F278A8B15005868BA /* OpencvWrapperAppBuild */ = {
+			isa = PBXGroup;
+			children = (
+				D57039A0278A8B15005868BA /* OpencvWrapperAppBuild.h */,
+				D57039A2278A8B15005868BA /* OpencvWrapperAppBuild.m */,
+			);
+			path = OpencvWrapperAppBuild;
+			sourceTree = "<group>";
+		};
+		D5F9D13A26C113780028685F = {
+			isa = PBXGroup;
+			children = (
+				D5F9D1AC26C17F5B0028685F /* OpencvWrapperApp.xcconfig */,
+				D5F9D14526C113780028685F /* OpencvWrapperApp */,
+				D570399F278A8B15005868BA /* OpencvWrapperAppBuild */,
+				D5F9D14426C113780028685F /* Products */,
+				D5F9D1B626C186910028685F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		D5F9D14426C113780028685F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D5F9D14326C113780028685F /* OpencvWrapperApp.app */,
+				D570399E278A8B15005868BA /* libOpencvWrapperAppBuild.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D5F9D14526C113780028685F /* OpencvWrapperApp */ = {
+			isa = PBXGroup;
+			children = (
+				D5F9D14626C113780028685F /* AppDelegate.h */,
+				D5F9D14726C113780028685F /* AppDelegate.m */,
+				D5F9D14926C113780028685F /* ViewController.h */,
+				D5F9D14A26C113780028685F /* ViewController.m */,
+				D5F9D14C26C113790028685F /* Assets.xcassets */,
+				D5F9D14E26C113790028685F /* Main.storyboard */,
+				D5F9D15126C113790028685F /* Info.plist */,
+				D5F9D15226C113790028685F /* main.m */,
+				D5F9D15426C113790028685F /* OpencvWrapperApp.entitlements */,
+			);
+			path = OpencvWrapperApp;
+			sourceTree = "<group>";
+		};
+		D5F9D1B626C186910028685F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D57039A7278A8B24005868BA /* OpencvWrapper.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D570399A278A8B15005868BA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D57039A1278A8B15005868BA /* OpencvWrapperAppBuild.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D570399D278A8B15005868BA /* OpencvWrapperAppBuild */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D57039A6278A8B15005868BA /* Build configuration list for PBXNativeTarget "OpencvWrapperAppBuild" */;
+			buildPhases = (
+				D570399A278A8B15005868BA /* Headers */,
+				D570399B278A8B15005868BA /* Sources */,
+				D570399C278A8B15005868BA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OpencvWrapperAppBuild;
+			productName = OpencvWrapperAppBuild;
+			productReference = D570399E278A8B15005868BA /* libOpencvWrapperAppBuild.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		D5F9D14226C113780028685F /* OpencvWrapperApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5F9D15726C113790028685F /* Build configuration list for PBXNativeTarget "OpencvWrapperApp" */;
+			buildPhases = (
+				D5F9D13F26C113780028685F /* Sources */,
+				D5F9D14026C113780028685F /* Frameworks */,
+				D5F9D14126C113780028685F /* Resources */,
+				D5F9D1D226C254BA0028685F /* [CP] Copy OpencvWrapper Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D57039AC278A8B62005868BA /* PBXTargetDependency */,
+			);
+			name = OpencvWrapperApp;
+			productName = OpencvWrapperApp;
+			productReference = D5F9D14326C113780028685F /* OpencvWrapperApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D5F9D13B26C113780028685F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1250;
+				TargetAttributes = {
+					D570399D278A8B15005868BA = {
+						CreatedOnToolsVersion = 13.1;
+					};
+					D5F9D14226C113780028685F = {
+						CreatedOnToolsVersion = 12.5.1;
+					};
+				};
+			};
+			buildConfigurationList = D5F9D13E26C113780028685F /* Build configuration list for PBXProject "OpencvWrapperApp" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D5F9D13A26C113780028685F;
+			productRefGroup = D5F9D14426C113780028685F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D5F9D14226C113780028685F /* OpencvWrapperApp */,
+				D570399D278A8B15005868BA /* OpencvWrapperAppBuild */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D5F9D14126C113780028685F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5F9D14D26C113790028685F /* Assets.xcassets in Resources */,
+				D5F9D1AD26C17F5B0028685F /* OpencvWrapperApp.xcconfig in Resources */,
+				D5F9D15026C113790028685F /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D5F9D1D226C254BA0028685F /* [CP] Copy OpencvWrapper Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy OpencvWrapper Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nbash OpencvWrapperApp/copy_opencv_wrapper.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D570399B278A8B15005868BA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D57039A3278A8B15005868BA /* OpencvWrapperAppBuild.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D5F9D13F26C113780028685F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5F9D14B26C113780028685F /* ViewController.m in Sources */,
+				D5F9D15326C113790028685F /* main.m in Sources */,
+				D5F9D14826C113780028685F /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D57039AC278A8B62005868BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D570399D278A8B15005868BA /* OpencvWrapperAppBuild */;
+			targetProxy = D57039AB278A8B62005868BA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D5F9D14E26C113790028685F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D5F9D14F26C113790028685F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D57039A4278A8B15005868BA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 11.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D57039A5278A8B15005868BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 11.4;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		D5F9D15526C113790028685F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		D5F9D15626C113790028685F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		D5F9D15826C113790028685F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D5F9D1AC26C17F5B0028685F /* OpencvWrapperApp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpencvWrapperApp/OpencvWrapperApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(OPENCV_WRAPPER_FRAMEWORK_INCLUDE_PATH)";
+				INFOPLIST_FILE = OpencvWrapperApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				OTHER_LDFLAGS = "$(OPENCV_WRAPPER_FRAMEWORK_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.OpencvWrapperApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		D5F9D15926C113790028685F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D5F9D1AC26C17F5B0028685F /* OpencvWrapperApp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OpencvWrapperApp/OpencvWrapperApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				HEADER_SEARCH_PATHS = "$(OPENCV_WRAPPER_FRAMEWORK_INCLUDE_PATH)";
+				INFOPLIST_FILE = OpencvWrapperApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				OTHER_LDFLAGS = "$(OPENCV_WRAPPER_FRAMEWORK_PATH)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.OpencvWrapperApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D57039A6278A8B15005868BA /* Build configuration list for PBXNativeTarget "OpencvWrapperAppBuild" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D57039A4278A8B15005868BA /* Debug */,
+				D57039A5278A8B15005868BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5F9D13E26C113780028685F /* Build configuration list for PBXProject "OpencvWrapperApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5F9D15526C113790028685F /* Debug */,
+				D5F9D15626C113790028685F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5F9D15726C113790028685F /* Build configuration list for PBXNativeTarget "OpencvWrapperApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D5F9D15826C113790028685F /* Debug */,
+				D5F9D15926C113790028685F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D5F9D13B26C113780028685F /* Project object */;
+}

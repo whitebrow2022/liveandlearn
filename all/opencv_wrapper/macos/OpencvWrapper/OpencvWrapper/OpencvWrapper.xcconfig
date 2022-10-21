@@ -1,0 +1,11 @@
+//
+//  OpencvWrapper.xcconfig
+//  OpencvWrapper
+//
+//  Created by liangxu on 2022/10/21.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "OpencvWrapperCommon.xcconfig"
