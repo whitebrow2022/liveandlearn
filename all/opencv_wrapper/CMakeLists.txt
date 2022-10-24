@@ -122,7 +122,6 @@ if (OPENCV_WRAPPER_BUILD_SHARED_LIBS)
     opencv_objdetect
     opencv_photo
     opencv_stitching
-    opencv_ts
     opencv_video
     opencv_videoio
   )
