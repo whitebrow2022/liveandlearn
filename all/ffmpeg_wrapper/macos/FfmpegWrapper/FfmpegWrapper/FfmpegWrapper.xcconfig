@@ -1,0 +1,11 @@
+//
+//  FfmpegWrapper.xcconfig
+//  FfmpegWrapper
+//
+//  Created by liangxu on 2022/10/25.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "FfmpegWrapperCommon.xcconfig"

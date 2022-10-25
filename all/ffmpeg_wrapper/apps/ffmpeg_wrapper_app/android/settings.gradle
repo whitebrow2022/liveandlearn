@@ -1,0 +1,4 @@
+include ':app'
+include ':ffmpeg_wrapper'
+project(':ffmpeg_wrapper').projectDir = new File(settingsDir, '../../../android/ffmpeg_wrapper')
+rootProject.name = "FfmpegWrapperApp"

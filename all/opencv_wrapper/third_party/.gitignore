@@ -1,2 +1,5 @@
+/externals/
 /src/
 /tmp/
+/ffmpeg/out/
+/ffmpeg/vs_env.sh

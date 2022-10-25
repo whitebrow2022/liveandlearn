@@ -45,6 +45,29 @@ if(OPENCV_WRAPPER_BUILD_OBJECT_LIBS)
   message(STATUS "======>> Build ${project_name} as a object library.")
 endif()
 
+# ffmpeg
+if(OPENCV_FFMPEG_USE_FIND_PACKAGE)
+  set(HAVE_FFMPEG ON)
+  set(OPENCV_FFMPEG_SKIP_BUILD_CHECK ON)
+  set(FFMPEG_libavcodec_FOUND 1)
+  set(FFMPEG_libavformat_FOUND 1)
+  set(FFMPEG_libavutil_FOUND 1)
+  set(FFMPEG_libswscale_FOUND 1)
+  set(FFMPEG_libavresample_FOUND 1)
+  set(FFMPEG_libavcodec_VERSION 58.134.100)
+  set(FFMPEG_libavformat_VERSION 58.76.100)
+  set(FFMPEG_libavutil_VERSION 56.70.100)
+  set(FFMPEG_libswscale_VERSION 5.9.100)
+  set(FFMPEG_libavresample_VERSION 4.0.0)
+
+  set(ffmpeg_install_dir "${CMAKE_CURRENT_SOURCE_DIR}/third_party/ffmpeg/out/win_x64")
+  include_directories(${ffmpeg_install_dir}/include)
+  link_directories(${ffmpeg_install_dir}/lib)
+endif()
+if (OPENCV_FFMPEG_USE_FIND_PACKAGE AND NOT HAVE_FFMPEG)
+  message(FATAL_ERROR "ffmpeg not have")
+endif()
+
 add_subdirectory(third_party)
 
 add_definitions(-DOPENCV_WRAPPER_IMPLEMENTATION)
@@ -110,7 +133,7 @@ endif()
 if (OPENCV_WRAPPER_BUILD_SHARED_LIBS)
   set(shared_lib ${project_name}_lib)
   add_library(${shared_lib} SHARED ${opencv_wrapper_src} ${opencv_wrapper_public_header})
-  target_link_libraries(${shared_lib} 
+  target_link_libraries(${shared_lib} PRIVATE
     opencv_calib3d
     opencv_core
     opencv_features2d
@@ -125,6 +148,26 @@ if (OPENCV_WRAPPER_BUILD_SHARED_LIBS)
     opencv_video
     opencv_videoio
   )
+  if(HAVE_FFMPEG AND WIN32)
+    # ffmpeg libs
+    target_link_libraries(${shared_lib} PRIVATE
+      libavcodec
+      libavdevice
+      libavfilter
+      libavformat
+      libavutil
+      libswresample
+      libswscale
+      )
+    # win32 libs
+    target_link_libraries(${shared_lib} PRIVATE
+      Strmiids
+      Mfuuid
+      Ws2_32
+      Bcrypt
+      Secur32
+      )
+  endif()
   set_target_properties(${shared_lib} PROPERTIES
     OUTPUT_NAME ${project_name}
     POSITION_INDEPENDENT_CODE ${OPENCV_WRAPPER_BUILD_SHARED_LIBS}

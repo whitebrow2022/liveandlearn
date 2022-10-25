@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FfmpegWrapperFrame</class>
+ <widget class="QMainWindow" name="FfmpegWrapperFrame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>FfmpegWrapperApp</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="imageHolder">
+      <property name="text">
+       <string/>
+      </property>
+      <layout class="QVBoxLayout" name="imageHolderLayout">
+       <item>
+        <widget class="QLabel" name="videoDuration">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="converterStatus">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuVideo">
+    <property name="title">
+     <string>Video</string>
+    </property>
+    <addaction name="actionFirstFrame"/>
+    <addaction name="actionToImages"/>
+    <addaction name="actionToMp4"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuVideo"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionFirstFrame"/>
+   <addaction name="actionToMp4"/>
+   <addaction name="separator"/>
+   <addaction name="actionAbout"/>
+   <addaction name="separator"/>
+   <addaction name="actionExit"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionFirstFrame">
+   <property name="icon">
+    <iconset resource="ffmpeg_wrapper_app.qrc">
+     <normaloff>:/images/pop.png</normaloff>
+     :/images/pop.png
+    </iconset>
+   </property>
+   <property name="text">
+    <string>FirstFrame</string>
+   </property>
+   <property name="toolTip">
+    <string>Extract first frame</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="ffmpeg_wrapper_app.qrc">
+     <normaloff>:/images/exit.png</normaloff>
+     :/images/exit.png
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit ffmpeg_wrapper_app</string>
+   </property>
+   <property name="shortcut">
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="ffmpeg_wrapper_app.qrc">
+     <normaloff>:/images/info.png</normaloff>
+     :/images/info.png
+    </iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="toolTip">
+    <string>About ffmpeg_wrapper_app</string>
+   </property>
+  </action>
+  <action name="actionToImages">
+   <property name="text">
+    <string>ToImages</string>
+   </property>
+  </action>
+  <action name="actionToMp4">
+   <property name="text">
+    <string>ToMp4</string>
+   </property>
+   <property name="icon">
+    <iconset resource="ffmpeg_wrapper_app.qrc">
+     <normaloff>:/images/pop.png</normaloff>
+     :/images/pop.png
+    </iconset>
+   </property>
+   <property name="toolTip">
+    <string>Convert To Mp4</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

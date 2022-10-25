@@ -46,10 +46,15 @@ endfunction()
 #set(EXTERNAL_BRANCH_NAME "master")
 #git_clone_and_update(${OPENSSL_REPO} ${OPENSSL_LOCATION} ${OPENSSL_BRANCH_NAME})
 
-set(OPENCV_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/src/opencv")
+set(OPENCV_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/externals/opencv")
 set(OPENCV_REPO "https://github.com/opencv/opencv.git")
 set(OPENCV_BRANCH_NAME "4.x")
 git_clone_and_update(${OPENCV_REPO} ${OPENCV_LOCATION} ${OPENCV_BRANCH_NAME})
+
+set(FFMPEG_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/externals/ffmpeg")
+set(FFMPEG_REPO "https://github.com/FFmpeg/FFmpeg.git")
+set(FFMPEG_BRANCH_NAME "release/5.1")
+git_clone_and_update(${FFMPEG_REPO} ${FFMPEG_LOCATION} ${FFMPEG_BRANCH_NAME})
 
 if(IOS)
   # fix compile error

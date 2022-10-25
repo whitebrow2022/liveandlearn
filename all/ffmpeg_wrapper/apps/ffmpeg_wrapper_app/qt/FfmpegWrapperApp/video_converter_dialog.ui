@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VideoConverterDialog</class>
+ <widget class="QDialog" name="VideoConverterDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>508</width>
+    <height>417</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="imageHolder">
+     <property name="text">
+      <string/>
+     </property>
+     <layout class="QVBoxLayout" name="imageHolderContentLayout">
+      <item>
+       <layout class="QHBoxLayout" name="inputFileLayout">
+        <item>
+         <widget class="QLabel" name="inputFileLabel">
+          <property name="text">
+           <string>input video file:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="inputFilePath">
+          <property name="text">
+           <string></string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="inputFileButton">
+          <property name="text">
+           <string>select...</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="fileFormatLayout">
+        <item>
+         <widget class="QLabel" name="fileFormatLabel">
+          <property name="text">
+           <string>output file format:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="fileFormatCombo">
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="videoEncoderLayout">
+        <item>
+         <widget class="QLabel" name="videoEncoderLabel">
+          <property name="text">
+           <string>output video encoder:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="videoEncoderCombo">
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="videoBitrateLayout">
+        <item>
+         <widget class="QLabel" name="videoBitrateLabel">
+          <property name="text">
+           <string>output video bitrate:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="videoBitrateCombo">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="videoTimeLayout">
+        <item>
+         <widget class="QLabel" name="videoStartTimeLabel">
+          <property name="text">
+           <string>video start time:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="videoStartTime">
+          <property name="text">
+           <string></string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="videoRecordTimeLabel">
+          <property name="text">
+           <string>video record time:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="videoRecordTime">
+          <property name="text">
+           <string></string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="videoSizeLayout">
+        <item>
+         <widget class="QLabel" name="videoWidthLabel">
+          <property name="text">
+           <string>output video width:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="videoWidth">
+          <property name="text">
+           <string></string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="videoHeightLabel">
+          <property name="text">
+           <string>output video height:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="videoHeight">
+          <property name="text">
+           <string></string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="audioEncoderLayout">
+        <item>
+         <widget class="QLabel" name="audioEncoderLabel">
+          <property name="text">
+           <string>output audio encoder:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="audioEncoderCombo">
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="audioBitrateLayout">
+        <item>
+         <widget class="QLabel" name="audioBitrateLabel">
+          <property name="text">
+           <string>output audio bitrate:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="audioBitrateCombo">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>VideoConverterDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>VideoConverterDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

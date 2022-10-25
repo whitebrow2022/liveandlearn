@@ -1,0 +1,6 @@
+/externals/
+/tmp/
+/ffmpeg/out/
+/ffmpeg/win/vs_env.sh
+/x264/out/
+/x264/win/vs_env.sh
