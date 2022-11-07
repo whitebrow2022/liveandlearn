@@ -8,12 +8,12 @@
    - [msys2](https://www.msys2.org)
    - 安装必须的工具 `pacman -S make pkgconf diffutils`
    - or git bash构建
-      - 安装make: 参考[make-4.4-without-guile-w32-bin.zip](https://gist.github.com/evanwill/0207876c3243bbb6863e65ec5dc3f058)
+      - 安装make: `make-4.3-x86_64-pc-msys.zip`
          - 解压后，拷贝到`C:\Program Files\Git\mingw64`，注意：不要替换
-      - 安装pkgconfig: [](https://stackoverflow.com/questions/1710922/how-to-install-pkg-config-in-windows)
-         - 解压后，拷贝[pkg-config-lite-0.28-1_bin-win32.zip]()到安装 
-      - 安装diffutils
-         - diffutils-2.8.7-1-bin.zip和diffutils-2.8.7-1-dep.zip
+      - 安装pkgconfig: [pkg-config-lite-0.28-1_bin-win32.zip](https://stackoverflow.com/questions/1710922/how-to-install-pkg-config-in-windows)
+         - 解压后，拷贝到`C:\Program Files\Git\mingw64`，注意：不要替换
+      - 安装diffutils: `diffutils-2.8.7-1-bin.zip`和`diffutils-2.8.7-1-dep.zip`
+         - 解压后，拷贝到`C:\Program Files\Git\mingw64`，注意：不要替换
 2. msvc环境
    - 配置msvc环境
       ```bat
