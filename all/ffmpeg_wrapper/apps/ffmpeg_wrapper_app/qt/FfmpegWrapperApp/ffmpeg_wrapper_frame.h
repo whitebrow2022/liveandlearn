@@ -25,8 +25,8 @@ class FfmpegWrapperFrame : public QMainWindow, public VideoConverter::Delegate {
   ~FfmpegWrapperFrame();
 
  private slots:
-  void FirstFrame();
   void ExtractFirstValidFrame();
+  void TestApi();
   void ToMp4();
   void Exit();
   void About();

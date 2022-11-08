@@ -54,7 +54,7 @@
      <string>Video</string>
     </property>
     <addaction name="actionFirstFrame"/>
-    <addaction name="actionToImages"/>
+    <addaction name="actionTestApi"/>
     <addaction name="actionToMp4"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -130,9 +130,9 @@
     <string>About ffmpeg_wrapper_app</string>
    </property>
   </action>
-  <action name="actionToImages">
+  <action name="actionTestApi">
    <property name="text">
-    <string>ToImages</string>
+    <string>Test ffmpeg api</string>
    </property>
   </action>
   <action name="actionToMp4">

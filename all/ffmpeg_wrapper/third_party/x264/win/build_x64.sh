@@ -23,13 +23,16 @@ source ${bash_dir}/vs_env.sh
 
 # 3.安装工具链: nasm
 nasm_path=${bash_dir}/../../../../../tools/nasm/win64
-export PATH=${PATH}:${nasm_path}
+deps_path=${bash_dir}/../../../../../tools/bash_deps/win
+export PATH=${deps_path}:${PATH}:${nasm_path}
 
 # 4.构建
 cd ${bash_dir}/../../externals/x264
 
-
-CC=cl ./configure --enable-static --prefix=${bash_dir}/../out/win_x64
+# default
+#CC=cl ./configure --enable-static --prefix=${bash_dir}/../out/win_x64
+# debug
+CC=cl ./configure --enable-static --enable-debug --extra-cflags="//Od" --extra-ldflags="//DEBUG" --prefix=${bash_dir}/../out/win_x64 
 make
 make install
 

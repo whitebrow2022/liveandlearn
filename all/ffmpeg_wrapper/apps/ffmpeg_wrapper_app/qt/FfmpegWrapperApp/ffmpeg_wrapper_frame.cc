@@ -42,7 +42,9 @@ FfmpegWrapperFrame::FfmpegWrapperFrame(QWidget* parent)
     : QMainWindow(parent), ui_(new Ui::FfmpegWrapperFrame) {
   ui_->setupUi(this);
   connect(ui_->actionFirstFrame, &QAction::triggered, this,
-          &FfmpegWrapperFrame::FirstFrame);
+          &FfmpegWrapperFrame::ExtractFirstValidFrame);
+  connect(ui_->actionTestApi, &QAction::triggered, this,
+          &FfmpegWrapperFrame::TestApi);
   connect(ui_->actionExit, &QAction::triggered, this,
           &FfmpegWrapperFrame::Exit);
   connect(ui_->actionAbout, &QAction::triggered, this,
@@ -53,7 +55,7 @@ FfmpegWrapperFrame::FfmpegWrapperFrame(QWidget* parent)
 
 FfmpegWrapperFrame::~FfmpegWrapperFrame() { delete ui_; }
 
-void FfmpegWrapperFrame::FirstFrame() { ExtractFirstValidFrame(); }
+void FfmpegWrapperFrame::TestApi() { VideoToRawVideoAndRawAudio(); }
 
 void FfmpegWrapperFrame::ExtractFirstValidFrame() {
   std::string video_path = GetVideoPath();

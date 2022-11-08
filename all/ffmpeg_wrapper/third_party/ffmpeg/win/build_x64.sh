@@ -23,7 +23,8 @@ source ${bash_dir}/vs_env.sh
 
 # 3.安装工具链: nasm
 nasm_path=${bash_dir}/../../../../../tools/nasm/win64
-export PATH=${PATH}:${nasm_path}
+deps_path=${bash_dir}/../../../../../tools/bash_deps/win
+export PATH=${deps_path}:${PATH}:${nasm_path}
 
 # 4.构建
 cd ${bash_dir}/../../externals/ffmpeg
@@ -32,7 +33,10 @@ x264_install_dir=${bash_dir}/../../x264/out/win_x64
 # fix: x264 not found using pkg-config
 export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${x264_install_dir}/lib/pkgconfig
 
-./configure --toolchain=msvc --target-os=win64 --arch=x86_64 --enable-static --disable-shared --prefix=${bash_dir}/../out/win_x64 --disable-programs --enable-libx264 --enable-gpl
+# default
+# ./configure --toolchain=msvc --target-os=win64 --arch=x86_64 --enable-static --disable-shared --prefix=${bash_dir}/../out/win_x64 --disable-programs --enable-libx264 --enable-gpl
+# debug, --disable-asm to fix 'ff_fdct_sse2' unreference
+./configure --toolchain=msvc --target-os=win64 --arch=x86_64 --enable-debug --disable-asm --disable-protocol=rtmp --disable-protocol=rtmpe --disable-protocol=rtmps --disable-protocol=rtmpt --disable-protocol=rtmpte --disable-protocol=rtmpts  --disable-optimizations --optflags="-Od" --extra-cflags="-Od" --extra-cxxflags="-Od" --extra-ldflags="//DEBUG" --enable-static --disable-shared --prefix=${bash_dir}/../out/win_x64 --disable-programs --enable-libx264 --enable-gpl
 make
 make install
 

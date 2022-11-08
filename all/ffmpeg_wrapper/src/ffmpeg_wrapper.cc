@@ -8,6 +8,7 @@
 
 #include "ffmpeg_video_converter.h"
 #include "tests/demuxing_decoding.h"
+#include "tests/hello_world.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,8 +44,12 @@ FFMPEG_WRAPPER_API const char *GetName() { return "FfmpegWrapper"; }
 FFMPEG_WRAPPER_API bool ConvertVideoToRawVideoAndRawAudio(
     const char *src_filename, const char *video_dst_filename,
     const char *audio_dst_filename) {
+#if 0
   return ConvertVideoToRawVideoAndAudio(src_filename, video_dst_filename,
                                         audio_dst_filename) == 0;
+#else
+  return TestHelloWorld(src_filename) == 0;
+#endif
 }
 
 END_NAMESPACE_FFMPEG_WRAPPER

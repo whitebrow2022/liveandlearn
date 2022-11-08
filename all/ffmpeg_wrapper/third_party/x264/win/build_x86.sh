@@ -21,9 +21,11 @@ source ${bash_dir}/vs_env.sh
 # 测试msvc编译器
 #cl.exe /?
 
-# 3.安装工具链: nasm
+# 3.安装工具链: nasm make pkg-config difftools
 nasm_path=${bash_dir}/../../../../../tools/nasm/win32
-export PATH=${PATH}:${nasm_path}
+deps_path=${bash_dir}/../../../../../tools/bash_deps/win
+export PATH=${deps_path}:${PATH}:${nasm_path}
+
 
 # 4.构建
 cd ${bash_dir}/../../externals/x264

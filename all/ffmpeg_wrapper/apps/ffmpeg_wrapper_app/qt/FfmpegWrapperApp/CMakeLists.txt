@@ -37,7 +37,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../.. ${CMAKE_CURRENT_BINARY_
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../include)
 
-set(TS_FILES ffmpeg_wrapper_app_zh.ts)
+#set(TS_FILES ffmpeg_wrapper_app_zh.ts)
 
 file(GLOB_RECURSE app_src ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${app_src})
@@ -46,7 +46,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${app_ui})
 file(GLOB_RECURSE app_res ${CMAKE_CURRENT_SOURCE_DIR}/*.ico ${CMAKE_CURRENT_SOURCE_DIR}/*.rc)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${app_res})
 
-qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+#qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 
 add_definitions(-DPROJECT_RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/../../../../../opencv_wrapper/resources")
 
