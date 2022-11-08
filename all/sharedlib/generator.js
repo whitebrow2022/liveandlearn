@@ -7,7 +7,7 @@ const moment = require('moment');
 const config = require('./config');
 
 const whiteList = ['.gitkeep'];
-const blackList = ['build', 'Build', 'vs_example.sln', '.idea', '.gradle', '.DS_Store', 'captures', '.externalNativeBuild', '.cxx', 'local.properties', 'MacApp.xcworkspace', 'MacExample.xcodeproj', 'IosApp.xcworkspace'];
+const blackList = ['build', 'Build', 'vs_example.sln', '.idea', '.gradle', '.DS_Store', 'captures', '.externalNativeBuild', '.cxx', 'local.properties', 'MacApp.xcworkspace', 'MacExample.xcodeproj', 'IosApp.xcworkspace', 'generate_vs2015_app_project.bat', 'generate_vs2015_mfc_project.bat', 'generate_vs2015_project.bat', 'generate_vs2019_app_project.bat', 'generate_vs2019_mfc_project.bat', 'generate_vs2019_project.bat'];
 
 /**
  * Collect a list of files to be processed. 
