@@ -10,19 +10,19 @@ rem %1-%9 refer to command line arguments after the batch file name. %0 refers t
 
 set batch_file=%0
 
-echo Generate sharedlib_name
+echo Generate qdbus_client
 set qt_msvc_path="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
-set vs_qt_dir=%bat_dir%\build\win_x64
+set vs_qt_dir=%bat_dir%\..\build\win_x64\client
 cmake -S %bat_dir% -B %vs_qt_dir% -G "Visual Studio 17 2022" -A x64 -T v143 -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_MSVC_DIR="%qt_msvc_path%" 
 set cmake_generate_err=%ERRORLEVEL%
 if %cmake_generate_err% NEQ 0 (
   exit /b %cmake_generate_err%
 )
-set qt_app=%bat_dir%sharedlib_name.sln
+set qt_app=%bat_dir%qdbus_client.sln
 if exist %qt_app% (
   echo '%qt_app%' exist
 ) else (
-  mklink "%qt_app%" "%vs_qt_dir%\sharedlib_name.sln"
+  mklink "%qt_app%" "%vs_qt_dir%\qdbus_client.sln"
 )
 
 echo "..."
