@@ -155,7 +155,7 @@ static int warned_cfg = 0;
         const char *indent = flags & INDENT? "  " : "";                 \
         if (flags & SHOW_VERSION) {                                     \
             unsigned int version = libname##_version();                 \
-            av_log(NULL, level,                                         \
+            AvLog(NULL, level,                                         \
                    "%slib%-11s %2d.%3d.%3d / %2d.%3d.%3d\n",            \
                    indent, #libname,                                    \
                    LIB##LIBNAME##_VERSION_MAJOR,                        \
@@ -168,12 +168,12 @@ static int warned_cfg = 0;
             const char *cfg = libname##_configuration();                \
             if (strcmp(FFMPEG_CONFIGURATION, cfg)) {                    \
                 if (!warned_cfg) {                                      \
-                    av_log(NULL, level,                                 \
+                    AvLog(NULL, level,                                 \
                             "%sWARNING: library configuration mismatch\n", \
                             indent);                                    \
                     warned_cfg = 1;                                     \
                 }                                                       \
-                av_log(NULL, level, "%s%-11s configuration: %s\n",      \
+                AvLog(NULL, level, "%s%-11s configuration: %s\n",      \
                         indent, #libname, cfg);                         \
             }                                                           \
         }                                                               \
@@ -195,14 +195,14 @@ static void print_program_info(int flags, int level)
 {
     const char *indent = flags & INDENT? "  " : "";
 
-    av_log(NULL, level, "%s version " FFMPEG_VERSION, program_name);
+    AvLog(NULL, level, "%s version " FFMPEG_VERSION, program_name);
     if (flags & SHOW_COPYRIGHT)
-        av_log(NULL, level, " Copyright (c) %d-%d the FFmpeg developers",
+        AvLog(NULL, level, " Copyright (c) %d-%d the FFmpeg developers",
                program_birth_year, CONFIG_THIS_YEAR);
-    av_log(NULL, level, "\n");
-    av_log(NULL, level, "%sbuilt with %s\n", indent, CC_IDENT);
+    AvLog(NULL, level, "\n");
+    AvLog(NULL, level, "%sbuilt with %s\n", indent, CC_IDENT);
 
-    av_log(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);
+    AvLog(NULL, level, "%sconfiguration: " FFMPEG_CONFIGURATION "\n", indent);
 }
 
 static void print_buildconf(int flags, int level)
@@ -224,9 +224,9 @@ static void print_buildconf(int flags, int level)
     }
 
     splitconf = strtok(str, "~");
-    av_log(NULL, level, "\n%sconfiguration:\n", indent);
+    AvLog(NULL, level, "\n%sconfiguration:\n", indent);
     while (splitconf != NULL) {
-        av_log(NULL, level, "%s%s%s\n", indent, indent, splitconf);
+        AvLog(NULL, level, "%s%s%s\n", indent, indent, splitconf);
         splitconf = strtok(NULL, "~");
     }
 }
@@ -394,7 +394,7 @@ static void show_help_codec(const char *name, int encoder)
     const AVCodec *codec;
 
     if (!name) {
-        av_log(NULL, AV_LOG_ERROR, "No codec name specified.\n");
+        AvLog(NULL, AV_LOG_ERROR, "No codec name specified.\n");
         return;
     }
 
@@ -413,13 +413,13 @@ static void show_help_codec(const char *name, int encoder)
         }
 
         if (!printed) {
-            av_log(NULL, AV_LOG_ERROR, "Codec '%s' is known to FFmpeg, "
+            AvLog(NULL, AV_LOG_ERROR, "Codec '%s' is known to FFmpeg, "
                    "but no %s for it are available. FFmpeg might need to be "
                    "recompiled with additional external libraries.\n",
                    name, encoder ? "encoders" : "decoders");
         }
     } else {
-        av_log(NULL, AV_LOG_ERROR, "Codec '%s' is not recognized by FFmpeg.\n",
+        AvLog(NULL, AV_LOG_ERROR, "Codec '%s' is not recognized by FFmpeg.\n",
                name);
     }
 }
@@ -429,7 +429,7 @@ static void show_help_demuxer(const char *name)
     const AVInputFormat *fmt = av_find_input_format(name);
 
     if (!fmt) {
-        av_log(NULL, AV_LOG_ERROR, "Unknown format '%s'.\n", name);
+        AvLog(NULL, AV_LOG_ERROR, "Unknown format '%s'.\n", name);
         return;
     }
 
@@ -447,13 +447,13 @@ static void show_help_protocol(const char *name)
     const AVClass *proto_class;
 
     if (!name) {
-        av_log(NULL, AV_LOG_ERROR, "No protocol name specified.\n");
+        AvLog(NULL, AV_LOG_ERROR, "No protocol name specified.\n");
         return;
     }
 
     proto_class = avio_protocol_get_class(name);
     if (!proto_class) {
-        av_log(NULL, AV_LOG_ERROR, "Unknown protocol '%s'.\n", name);
+        AvLog(NULL, AV_LOG_ERROR, "Unknown protocol '%s'.\n", name);
         return;
     }
 
@@ -466,7 +466,7 @@ static void show_help_muxer(const char *name)
     const AVOutputFormat *fmt = av_guess_format(name, NULL, NULL);
 
     if (!fmt) {
-        av_log(NULL, AV_LOG_ERROR, "Unknown format '%s'.\n", name);
+        AvLog(NULL, AV_LOG_ERROR, "Unknown format '%s'.\n", name);
         return;
     }
 
@@ -501,10 +501,10 @@ static void show_help_filter(const char *name)
     int i, count;
 
     if (!name) {
-        av_log(NULL, AV_LOG_ERROR, "No filter name specified.\n");
+        AvLog(NULL, AV_LOG_ERROR, "No filter name specified.\n");
         return;
     } else if (!f) {
-        av_log(NULL, AV_LOG_ERROR, "Unknown filter '%s'.\n", name);
+        AvLog(NULL, AV_LOG_ERROR, "Unknown filter '%s'.\n", name);
         return;
     }
 
@@ -543,7 +543,7 @@ static void show_help_filter(const char *name)
     if (f->flags & AVFILTER_FLAG_SUPPORT_TIMELINE)
         printf("This filter has support for timeline through the 'enable' option.\n");
 #else
-    av_log(NULL, AV_LOG_ERROR, "Build without libavfilter; "
+    AvLog(NULL, AV_LOG_ERROR, "Build without libavfilter; "
            "can not to satisfy request\n");
 #endif
 }
@@ -554,10 +554,10 @@ static void show_help_bsf(const char *name)
     const AVBitStreamFilter *bsf = av_bsf_get_by_name(name);
 
     if (!name) {
-        av_log(NULL, AV_LOG_ERROR, "No bitstream filter name specified.\n");
+        AvLog(NULL, AV_LOG_ERROR, "No bitstream filter name specified.\n");
         return;
     } else if (!bsf) {
-        av_log(NULL, AV_LOG_ERROR, "Unknown bit stream filter '%s'.\n", name);
+        AvLog(NULL, AV_LOG_ERROR, "Unknown bit stream filter '%s'.\n", name);
         return;
     }
 
@@ -637,7 +637,7 @@ static unsigned get_codecs_sorted(const AVCodecDescriptor ***rcodecs)
     while ((desc = avcodec_descriptor_next(desc)))
         nb_codecs++;
     if (!(codecs = av_calloc(nb_codecs, sizeof(*codecs)))) {
-        av_log(NULL, AV_LOG_ERROR, "Out of memory\n");
+        AvLog(NULL, AV_LOG_ERROR, "Out of memory\n");
         exit_program(1);
     }
     desc = NULL;
@@ -1140,7 +1140,7 @@ int init_report(const char *env, FILE **file)
     while (env && *env) {
         if ((ret = av_opt_get_key_value(&env, "=", ":", 0, &key, &val)) < 0) {
             if (count)
-                av_log(NULL, AV_LOG_ERROR,
+                AvLog(NULL, AV_LOG_ERROR,
                        "Failed to parse FFREPORT environment variable: %s\n",
                        av_err2str(ret));
             break;
@@ -1156,12 +1156,12 @@ int init_report(const char *env, FILE **file)
             char *tail;
             report_file_level = strtol(val, &tail, 10);
             if (*tail) {
-                av_log(NULL, AV_LOG_FATAL, "Invalid report file level\n");
+                AvLog(NULL, AV_LOG_FATAL, "Invalid report file level\n");
                 exit_program(1);
             }
             envlevel = 1;
         } else {
-            av_log(NULL, AV_LOG_ERROR, "Unknown key '%s' in FFREPORT\n", key);
+            AvLog(NULL, AV_LOG_ERROR, "Unknown key '%s' in FFREPORT\n", key);
         }
         av_free(val);
         av_free(key);
@@ -1172,7 +1172,7 @@ int init_report(const char *env, FILE **file)
                              av_x_if_null(filename_template, "%p-%t.log"), tm);
     av_free(filename_template);
     if (!av_bprint_is_complete(&filename)) {
-        av_log(NULL, AV_LOG_ERROR, "Out of memory building report file name\n");
+        AvLog(NULL, AV_LOG_ERROR, "Out of memory building report file name\n");
         return AVERROR(ENOMEM);
     }
 
@@ -1183,12 +1183,12 @@ int init_report(const char *env, FILE **file)
     report_file = fopen(filename.str, "w");
     if (!report_file) {
         int ret = AVERROR(errno);
-        av_log(NULL, AV_LOG_ERROR, "Failed to open report \"%s\": %s\n",
+        AvLog(NULL, AV_LOG_ERROR, "Failed to open report \"%s\": %s\n",
                filename.str, strerror(errno));
         return ret;
     }
     av_log_set_callback(log_callback_report);
-    av_log(NULL, AV_LOG_INFO,
+    AvLog(NULL, AV_LOG_INFO,
            "%s started on %04d-%02d-%02d at %02d:%02d:%02d\n"
            "Report written to \"%s\"\n"
            "Log level: %d\n",
@@ -1216,7 +1216,7 @@ int opt_max_alloc(void *optctx, const char *opt, const char *arg)
 
     max = strtol(arg, &tail, 10);
     if (*tail) {
-        av_log(NULL, AV_LOG_FATAL, "Invalid max_alloc \"%s\".\n", arg);
+        AvLog(NULL, AV_LOG_FATAL, "Invalid max_alloc \"%s\".\n", arg);
         exit_program(1);
     }
     av_max_alloc(max);
@@ -1287,10 +1287,10 @@ int opt_loglevel(void *optctx, const char *opt, const char *arg)
 
     level = strtol(arg, &tail, 10);
     if (*tail) {
-        av_log(NULL, AV_LOG_FATAL, "Invalid loglevel \"%s\". "
+        AvLog(NULL, AV_LOG_FATAL, "Invalid loglevel \"%s\". "
                "Possible levels are numbers or:\n", arg);
         for (i = 0; i < FF_ARRAY_ELEMS(log_levels); i++)
-            av_log(NULL, AV_LOG_FATAL, "\"%s\"\n", log_levels[i].name);
+            AvLog(NULL, AV_LOG_FATAL, "\"%s\"\n", log_levels[i].name);
         exit_program(1);
     }
 

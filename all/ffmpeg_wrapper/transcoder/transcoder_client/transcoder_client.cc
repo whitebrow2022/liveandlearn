@@ -14,12 +14,11 @@
 
 extern "C" {
 
-TRANSCODER_API  int Run(int argc, char* argv[]) {
+TRANSCODER_API int Run(int argc, char* argv[]) {
   QApplication a(argc, argv);
   TranscoderClientFrame w;
   w.show();
   auto ret = a.exec();
   return ret;
 }
-
 }

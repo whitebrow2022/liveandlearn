@@ -21,6 +21,8 @@
 
 #include <stdio.h>
 
+#include "server_ipc_service_c.h"
+
 /* The fopen_utf8 function here is essentially equivalent to avpriv_fopen_utf8,
  * except that it doesn't set O_CLOEXEC, and that it isn't exported
  * from a different library. (On Windows, each DLL might use a different

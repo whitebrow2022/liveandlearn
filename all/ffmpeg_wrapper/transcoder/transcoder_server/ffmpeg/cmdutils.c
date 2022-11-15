@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Various utilities for command line tools
  * Copyright (c) 2000-2003 Fabrice Bellard
  *
@@ -114,7 +114,7 @@ double parse_number_or_die(const char *context, const char *numstr, int type,
         error = "Expected int for %s but found %s\n";
     else
         return d;
-    av_log(NULL, AV_LOG_FATAL, error, context, numstr, min, max);
+    AvLog(NULL, AV_LOG_FATAL, error, context, numstr, min, max);
     exit_program(1);
     return 0;
 }
@@ -124,7 +124,7 @@ int64_t parse_time_or_die(const char *context, const char *timestr,
 {
     int64_t us;
     if (av_parse_time(&us, timestr, is_duration) < 0) {
-        av_log(NULL, AV_LOG_FATAL, "Invalid %s specification for %s: %s\n",
+        AvLog(NULL, AV_LOG_FATAL, "Invalid %s specification for %s: %s\n",
                is_duration ? "duration" : "date", context, timestr);
         exit_program(1);
     }
@@ -202,6 +202,7 @@ static int win32_argc = 0;
  */
 static void prepare_app_arguments(int *argc_ptr, char ***argv_ptr)
 {
+#if 0
     char *argstr_flat;
     wchar_t **argv_w;
     int i, buffsize = 0, offset = 0;
@@ -240,6 +241,7 @@ static void prepare_app_arguments(int *argc_ptr, char ***argv_ptr)
 
     *argc_ptr = win32_argc;
     *argv_ptr = win32_argv_utf8;
+#endif
 }
 #else
 static inline void prepare_app_arguments(int *argc_ptr, char ***argv_ptr)
@@ -291,7 +293,7 @@ static int write_option(void *optctx, const OptionDef *po, const char *opt,
     } else if (po->u.func_arg) {
         int ret = po->u.func_arg(optctx, opt, arg);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR,
+            AvLog(NULL, AV_LOG_ERROR,
                    "Failed to set value '%s' for option '%s': %s\n",
                    arg, opt, av_err2str(ret));
             return ret;
@@ -327,11 +329,11 @@ int parse_option(void *optctx, const char *opt, const char *arg,
     if (!po->name)
         po = &opt_avoptions;
     if (!po->name) {
-        av_log(NULL, AV_LOG_ERROR, "Unrecognized option '%s'\n", opt);
+        AvLog(NULL, AV_LOG_ERROR, "Unrecognized option '%s'\n", opt);
         return AVERROR(EINVAL);
     }
     if (po->flags & HAS_ARG && !arg) {
-        av_log(NULL, AV_LOG_ERROR, "Missing argument for option '%s'\n", opt);
+        AvLog(NULL, AV_LOG_ERROR, "Missing argument for option '%s'\n", opt);
         return AVERROR(EINVAL);
     }
 
@@ -377,7 +379,7 @@ int parse_optgroup(void *optctx, OptionGroup *g)
 {
     int i, ret;
 
-    av_log(NULL, AV_LOG_DEBUG, "Parsing a group of options: %s %s.\n",
+    AvLog(NULL, AV_LOG_DEBUG, "Parsing a group of options: %s %s.\n",
            g->group_def->name, g->arg);
 
     for (i = 0; i < g->nb_opts; i++) {
@@ -385,7 +387,7 @@ int parse_optgroup(void *optctx, OptionGroup *g)
 
         if (g->group_def->flags &&
             !(g->group_def->flags & o->opt->flags)) {
-            av_log(NULL, AV_LOG_ERROR, "Option %s (%s) cannot be applied to "
+            AvLog(NULL, AV_LOG_ERROR, "Option %s (%s) cannot be applied to "
                    "%s %s -- you are trying to apply an input option to an "
                    "output file or vice versa. Move this option before the "
                    "file it belongs to.\n", o->key, o->opt->help,
@@ -393,7 +395,7 @@ int parse_optgroup(void *optctx, OptionGroup *g)
             return AVERROR(EINVAL);
         }
 
-        av_log(NULL, AV_LOG_DEBUG, "Applying option %s (%s) with argument %s.\n",
+        AvLog(NULL, AV_LOG_DEBUG, "Applying option %s (%s) with argument %s.\n",
                o->key, o->opt->help, o->val);
 
         ret = write_option(optctx, o->opt, o->key, o->val);
@@ -401,7 +403,7 @@ int parse_optgroup(void *optctx, OptionGroup *g)
             return ret;
     }
 
-    av_log(NULL, AV_LOG_DEBUG, "Successfully parsed a group of options.\n");
+    AvLog(NULL, AV_LOG_DEBUG, "Successfully parsed a group of options.\n");
 
     return 0;
 }
@@ -539,7 +541,7 @@ int opt_default(void *optctx, const char *opt, const char *arg)
                          AV_OPT_SEARCH_CHILDREN | AV_OPT_SEARCH_FAKE_OBJ))) {
         av_dict_set(&format_opts, opt, arg, FLAGS);
         if (consumed)
-            av_log(NULL, AV_LOG_VERBOSE, "Routing option %s to both codec and muxer layer\n", opt);
+            AvLog(NULL, AV_LOG_VERBOSE, "Routing option %s to both codec and muxer layer\n", opt);
         consumed = 1;
     }
 #if CONFIG_SWSCALE
@@ -548,7 +550,7 @@ int opt_default(void *optctx, const char *opt, const char *arg)
         if (!strcmp(opt, "srcw") || !strcmp(opt, "srch") ||
             !strcmp(opt, "dstw") || !strcmp(opt, "dsth") ||
             !strcmp(opt, "src_format") || !strcmp(opt, "dst_format")) {
-            av_log(NULL, AV_LOG_ERROR, "Directly using swscale dimensions/format options is not supported, please use the -s or -pix_fmt options\n");
+            AvLog(NULL, AV_LOG_ERROR, "Directly using swscale dimensions/format options is not supported, please use the -s or -pix_fmt options\n");
             return AVERROR(EINVAL);
         }
         av_dict_set(&sws_dict, opt, arg, FLAGS);
@@ -557,7 +559,7 @@ int opt_default(void *optctx, const char *opt, const char *arg)
     }
 #else
     if (!consumed && !strcmp(opt, "sws_flags")) {
-        av_log(NULL, AV_LOG_WARNING, "Ignoring %s %s, due to disabled swscale\n", opt, arg);
+        AvLog(NULL, AV_LOG_WARNING, "Ignoring %s %s, due to disabled swscale\n", opt, arg);
         consumed = 1;
     }
 #endif
@@ -695,14 +697,14 @@ int split_commandline(OptionParseContext *octx, int argc, char *argv[],
     prepare_app_arguments(&argc, &argv);
 
     init_parse_context(octx, groups, nb_groups);
-    av_log(NULL, AV_LOG_DEBUG, "Splitting the commandline.\n");
+    AvLog(NULL, AV_LOG_DEBUG, "Splitting the commandline.\n");
 
     while (optindex < argc) {
         const char *opt = argv[optindex++], *arg;
         const OptionDef *po;
         int ret;
 
-        av_log(NULL, AV_LOG_DEBUG, "Reading option '%s' ...", opt);
+        AvLog(NULL, AV_LOG_DEBUG, "Reading option '%s' ...", opt);
 
         if (opt[0] == '-' && opt[1] == '-' && !opt[2]) {
             dashdash = optindex;
@@ -711,7 +713,7 @@ int split_commandline(OptionParseContext *octx, int argc, char *argv[],
         /* unnamed group separators, e.g. output filename */
         if (opt[0] != '-' || !opt[1] || dashdash+1 == optindex) {
             finish_group(octx, 0, opt);
-            av_log(NULL, AV_LOG_DEBUG, " matched as %s.\n", groups[0].name);
+            AvLog(NULL, AV_LOG_DEBUG, " matched as %s.\n", groups[0].name);
             continue;
         }
         opt++;
@@ -720,7 +722,7 @@ int split_commandline(OptionParseContext *octx, int argc, char *argv[],
 do {                                                                           \
     arg = argv[optindex++];                                                    \
     if (!arg) {                                                                \
-        av_log(NULL, AV_LOG_ERROR, "Missing argument for option '%s'.\n", opt);\
+        AvLog(NULL, AV_LOG_ERROR, "Missing argument for option '%s'.\n", opt);\
         return AVERROR(EINVAL);                                                \
     }                                                                          \
 } while (0)
@@ -729,7 +731,7 @@ do {                                                                           \
         if ((ret = match_group_separator(groups, nb_groups, opt)) >= 0) {
             GET_ARG(arg);
             finish_group(octx, ret, arg);
-            av_log(NULL, AV_LOG_DEBUG, " matched as %s with argument '%s'.\n",
+            AvLog(NULL, AV_LOG_DEBUG, " matched as %s with argument '%s'.\n",
                    groups[ret].name, arg);
             continue;
         }
@@ -747,7 +749,7 @@ do {                                                                           \
             }
 
             add_opt(octx, po, opt, arg);
-            av_log(NULL, AV_LOG_DEBUG, " matched as option '%s' (%s) with "
+            AvLog(NULL, AV_LOG_DEBUG, " matched as option '%s' (%s) with "
                    "argument '%s'.\n", po->name, po->help, arg);
             continue;
         }
@@ -756,12 +758,12 @@ do {                                                                           \
         if (argv[optindex]) {
             ret = opt_default(NULL, opt, argv[optindex]);
             if (ret >= 0) {
-                av_log(NULL, AV_LOG_DEBUG, " matched as AVOption '%s' with "
+                AvLog(NULL, AV_LOG_DEBUG, " matched as AVOption '%s' with "
                        "argument '%s'.\n", opt, argv[optindex]);
                 optindex++;
                 continue;
             } else if (ret != AVERROR_OPTION_NOT_FOUND) {
-                av_log(NULL, AV_LOG_ERROR, "Error parsing option '%s' "
+                AvLog(NULL, AV_LOG_ERROR, "Error parsing option '%s' "
                        "with argument '%s'.\n", opt, argv[optindex]);
                 return ret;
             }
@@ -772,20 +774,20 @@ do {                                                                           \
             (po = find_option(options, opt + 2)) &&
             po->name && po->flags & OPT_BOOL) {
             add_opt(octx, po, opt, "0");
-            av_log(NULL, AV_LOG_DEBUG, " matched as option '%s' (%s) with "
+            AvLog(NULL, AV_LOG_DEBUG, " matched as option '%s' (%s) with "
                    "argument 0.\n", po->name, po->help);
             continue;
         }
 
-        av_log(NULL, AV_LOG_ERROR, "Unrecognized option '%s'.\n", opt);
+        AvLog(NULL, AV_LOG_ERROR, "Unrecognized option '%s'.\n", opt);
         return AVERROR_OPTION_NOT_FOUND;
     }
 
     if (octx->cur_group.nb_opts || codec_opts || format_opts)
-        av_log(NULL, AV_LOG_WARNING, "Trailing option(s) found in the "
+        AvLog(NULL, AV_LOG_WARNING, "Trailing option(s) found in the "
                "command: may be ignored.\n");
 
-    av_log(NULL, AV_LOG_DEBUG, "Finished splitting the commandline.\n");
+    AvLog(NULL, AV_LOG_DEBUG, "Finished splitting the commandline.\n");
 
     return 0;
 }
@@ -797,7 +799,7 @@ void print_error(const char *filename, int err)
 
     if (av_strerror(err, errbuf, sizeof(errbuf)) < 0)
         errbuf_ptr = strerror(AVUNERROR(err));
-    av_log(NULL, AV_LOG_ERROR, "%s: %s\n", filename, errbuf_ptr);
+    AvLog(NULL, AV_LOG_ERROR, "%s: %s\n", filename, errbuf_ptr);
 }
 
 int read_yesno(void)
@@ -938,7 +940,7 @@ int check_stream_specifier(AVFormatContext *s, AVStream *st, const char *spec)
 {
     int ret = avformat_match_stream_specifier(s, st, spec);
     if (ret < 0)
-        av_log(s, AV_LOG_ERROR, "Invalid stream specifier: %s.\n", spec);
+        AvLog(s, AV_LOG_ERROR, "Invalid stream specifier: %s.\n", spec);
     return ret;
 }
 
@@ -1010,7 +1012,7 @@ AVDictionary **setup_find_stream_info_opts(AVFormatContext *s,
         return NULL;
     opts = av_calloc(s->nb_streams, sizeof(*opts));
     if (!opts) {
-        av_log(NULL, AV_LOG_ERROR,
+        AvLog(NULL, AV_LOG_ERROR,
                "Could not alloc memory for stream options.\n");
         exit_program(1);
     }
@@ -1023,13 +1025,13 @@ AVDictionary **setup_find_stream_info_opts(AVFormatContext *s,
 void *grow_array(void *array, int elem_size, int *size, int new_size)
 {
     if (new_size >= INT_MAX / elem_size) {
-        av_log(NULL, AV_LOG_ERROR, "Array too big.\n");
+        AvLog(NULL, AV_LOG_ERROR, "Array too big.\n");
         exit_program(1);
     }
     if (*size < new_size) {
         uint8_t *tmp = av_realloc_array(array, new_size, elem_size);
         if (!tmp) {
-            av_log(NULL, AV_LOG_ERROR, "Could not alloc buffer.\n");
+            AvLog(NULL, AV_LOG_ERROR, "Could not alloc buffer.\n");
             exit_program(1);
         }
         memset(tmp + *size*elem_size, 0, (new_size-*size) * elem_size);
@@ -1045,7 +1047,7 @@ void *allocate_array_elem(void *ptr, size_t elem_size, int *nb_elems)
 
     if (!(new_elem = av_mallocz(elem_size)) ||
         av_dynarray_add_nofree(ptr, nb_elems, new_elem) < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Could not alloc buffer.\n");
+        AvLog(NULL, AV_LOG_ERROR, "Could not alloc buffer.\n");
         exit_program(1);
     }
     return new_elem;
@@ -1060,7 +1062,7 @@ double get_rotation(int32_t *displaymatrix)
     theta -= 360*floor(theta/360 + 0.9/360);
 
     if (fabs(theta - 90*round(theta/90)) > 2)
-        av_log(NULL, AV_LOG_WARNING, "Odd rotation angle.\n"
+        AvLog(NULL, AV_LOG_WARNING, "Odd rotation angle.\n"
                "If you want to help, upload a sample "
                "of this file to https://streams.videolan.org/upload/ "
                "and contact the ffmpeg-devel mailing list. (ffmpeg-devel@ffmpeg.org)");

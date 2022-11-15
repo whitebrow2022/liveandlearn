@@ -17,7 +17,7 @@ class ServerDriver : public QObject {
   explicit ServerDriver(QObject* parent = nullptr);
   ~ServerDriver();
 
-  void StartServer();
+  void StartServer(QStringList ffmpeg_args);
 
   void StopServer();
 
@@ -28,7 +28,12 @@ class ServerDriver : public QObject {
     return false;
   }
 
+ signals:
+  void ServerStarted();
+  void ServerFinished(bool normal);
+
  private slots:
+  void OnChildStarted();
   void OnChildFinished(int exit_code, QProcess::ExitStatus exit_status);
 
  private:

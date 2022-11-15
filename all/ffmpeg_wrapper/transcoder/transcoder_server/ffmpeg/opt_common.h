@@ -25,6 +25,8 @@
 
 #include "cmdutils.h"
 
+#include "server_ipc_service_c.h"
+
 #if CONFIG_AVDEVICE
 /**
  * Print a listing containing autodetected sinks of the output device.

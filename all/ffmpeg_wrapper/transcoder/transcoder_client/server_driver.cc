@@ -14,16 +14,16 @@ ServerDriver::~ServerDriver() {
   }
 }
 
-void ServerDriver::StartServer() {
+void ServerDriver::StartServer(QStringList ffmpeg_args) {
   if (server_) {
     return;
   }
-  QStringList arguments;
-  arguments << "--help";
+  QStringList arguments = ffmpeg_args;
   server_ = new QProcess(this);
   connect(server_,
           QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this,
           &ServerDriver::OnChildFinished);
+  connect(server_, &QProcess::started, this, &ServerDriver::OnChildStarted);
   // server run in app shell
   server_->start(QApplication::applicationFilePath(), arguments);
 }
@@ -32,6 +32,11 @@ void ServerDriver::StopServer() {
   if (server_) {
     server_->terminate();
   }
+}
+
+void ServerDriver::OnChildStarted() {
+  qDebug() << QString("child process started");
+  emit(ServerStarted());
 }
 
 void ServerDriver::OnChildFinished(int exit_code,
@@ -43,4 +48,6 @@ void ServerDriver::OnChildFinished(int exit_code,
     server_->deleteLater();
     server_ = nullptr;
   }
+
+  emit(ServerFinished(exit_code == 0));
 }

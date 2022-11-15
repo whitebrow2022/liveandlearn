@@ -50,6 +50,8 @@ extern "C" {
 
 #include "libswresample/swresample.h"
 
+#include "server_ipc_service_c.h"
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,4 +1,4 @@
-// Created by liangxu on 2022/11/14.
+﻿// Created by liangxu on 2022/11/14.
 //
 // Copyright (c) 2022 The Transcoder Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -6,8 +6,40 @@
 
 #include "client_ipc_service.h"
 
+#include <QDateTime>
+#include <QMessageBox>
+#include <QTimer>
+
 ClientIpcService::ClientIpcService(QObject* parent /* = nullptr*/)
-    : QObject(parent), socket_(new QLocalSocket(this)) {
+    : QObject(parent), socket_(nullptr) {}
+
+const QString& ClientIpcService::GetServerName() const {
+  static QString server_name =
+      QString("TranscoderUserServer-%1")
+          .arg(QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss"));
+  return server_name;
+}
+
+bool ClientIpcService::StartServer() {
+  qDebug() << __FUNCTION__;
+  if (server_) {
+    return true;
+  }
+  server_ = new QLocalServer(this);
+  if (!server_->listen(GetServerName())) {
+    QMessageBox::critical(
+        nullptr, tr("Local Fortune Server"),
+        tr("Unable to start the server: %1.").arg(server_->errorString()));
+    return false;
+  }
+  connect(server_, &QLocalServer::newConnection, this,
+          &ClientIpcService::OnNewConnection);
+  return true;
+}
+
+void ClientIpcService::OnNewConnection() {
+  socket_ = server_->nextPendingConnection();
+  // server_->close();  // because only listen one
 
   socket_stream_.setDevice(socket_);
   socket_stream_.setVersion(QDataStream::Qt_5_10);
@@ -17,24 +49,18 @@ ClientIpcService::ClientIpcService(QObject* parent /* = nullptr*/)
           &ClientIpcService::OnErrorOccurred);
   connect(socket_, &QLocalSocket::stateChanged, this,
           &ClientIpcService::OnSocketStateChanged);
-}
+  connect(socket_, &QLocalSocket::disconnected, this,
+          &ClientIpcService::OnSocketDisconnected);
+  socket_stream_.setDevice(socket_);
+  socket_stream_.setVersion(QDataStream::Qt_5_10);
 
-void ClientIpcService::ConnectToServer() {
-  if (!socket_) {
-    return;
-  }
-
-  if (socket_state_ == QLocalSocket::UnconnectedState) {
-    socket_->connectToServer("TranscoderServer");
-  } else if (socket_state_ == QLocalSocket::ConnectedState) {
-    static quint64 written_count = 0;
-    QString message =
-        QString("ConnectToServer Written Number: %1").arg(written_count++);
-    WriteData(message);
-  }
+  emit(TranscoderConnected());
 }
 
 void ClientIpcService::OnReadyRead() {
+  if (!socket_) {
+    return;
+  }
   quint32 block_size = 0;
   // Relies on the fact that QDataStream serializes a quint32 into
   // sizeof(quint32) bytes
@@ -53,15 +79,22 @@ void ClientIpcService::OnReadyRead() {
   emit(DataChanged(server_data));
 
   // retry read more data
-  OnReadyRead();
+  // TODO: fix localsocket loss data
+  QTimer::singleShot(0, this, &ClientIpcService::OnReadyRead);
 }
 void ClientIpcService::OnErrorOccurred(
-  QLocalSocket::LocalSocketError socketError) {
-}
+    QLocalSocket::LocalSocketError socketError) {}
 
 void ClientIpcService::OnSocketStateChanged(
     QLocalSocket::LocalSocketState socket_state) {
+  qInfo() << "socket_state: " << socket_state;
   socket_state_ = socket_state;
+}
+
+void ClientIpcService::OnSocketDisconnected() {
+  socket_->deleteLater();
+  socket_ = nullptr;
+  emit(TranscoderDisconnected());
 }
 
 void ClientIpcService::WriteData(const QString& data) {

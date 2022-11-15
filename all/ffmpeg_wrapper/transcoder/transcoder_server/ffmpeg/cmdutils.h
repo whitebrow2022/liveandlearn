@@ -30,6 +30,8 @@
 #include "libavformat/avformat.h"
 #include "libswscale/swscale.h"
 
+#include "server_ipc_service_c.h"
+
 #ifdef _WIN32
 #undef main /* We don't want SDL to override our main() */
 #endif

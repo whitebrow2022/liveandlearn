@@ -231,12 +231,12 @@ done:
     av_dict_free(&options);
     return err;
 invalid:
-    av_log(NULL, AV_LOG_ERROR,
+    AvLog(NULL, AV_LOG_ERROR,
            "Invalid device specification \"%s\": %s\n", arg, errmsg);
     err = AVERROR(EINVAL);
     goto done;
 fail:
-    av_log(NULL, AV_LOG_ERROR,
+    AvLog(NULL, AV_LOG_ERROR,
            "Device creation failed: %d.\n", err);
     av_buffer_unref(&device_ref);
     goto done;
@@ -259,7 +259,7 @@ static int hw_device_init_from_type(enum AVHWDeviceType type,
 
     err = av_hwdevice_ctx_create(&device_ref, type, device, NULL, 0);
     if (err < 0) {
-        av_log(NULL, AV_LOG_ERROR,
+        AvLog(NULL, AV_LOG_ERROR,
                "Device creation failed: %d.\n", err);
         goto fail;
     }
@@ -339,7 +339,7 @@ int hw_device_setup_for_decode(InputStream *ist)
             if (ist->hwaccel_id == HWACCEL_AUTO) {
                 ist->hwaccel_device_type = dev->type;
             } else if (ist->hwaccel_device_type != dev->type) {
-                av_log(ist->dec_ctx, AV_LOG_ERROR, "Invalid hwaccel device "
+                AvLog(ist->dec_ctx, AV_LOG_ERROR, "Invalid hwaccel device "
                        "specified for decoder: device %s of type %s is not "
                        "usable with hwaccel %s.\n", dev->name,
                        av_hwdevice_get_type_name(dev->type),
@@ -390,7 +390,7 @@ int hw_device_setup_for_decode(InputStream *ist)
             type = config->device_type;
             dev = hw_device_get_by_type(type);
             if (dev) {
-                av_log(ist->dec_ctx, AV_LOG_INFO, "Using auto "
+                AvLog(ist->dec_ctx, AV_LOG_INFO, "Using auto "
                        "hwaccel type %s with existing device %s.\n",
                        av_hwdevice_get_type_name(type), dev->name);
             }
@@ -408,12 +408,12 @@ int hw_device_setup_for_decode(InputStream *ist)
                 continue;
             }
             if (ist->hwaccel_device) {
-                av_log(ist->dec_ctx, AV_LOG_INFO, "Using auto "
+                AvLog(ist->dec_ctx, AV_LOG_INFO, "Using auto "
                        "hwaccel type %s with new device created "
                        "from %s.\n", av_hwdevice_get_type_name(type),
                        ist->hwaccel_device);
             } else {
-                av_log(ist->dec_ctx, AV_LOG_INFO, "Using auto "
+                AvLog(ist->dec_ctx, AV_LOG_INFO, "Using auto "
                        "hwaccel type %s with new default device.\n",
                        av_hwdevice_get_type_name(type));
             }
@@ -421,7 +421,7 @@ int hw_device_setup_for_decode(InputStream *ist)
         if (dev) {
             ist->hwaccel_device_type = type;
         } else {
-            av_log(ist->dec_ctx, AV_LOG_INFO, "Auto hwaccel "
+            AvLog(ist->dec_ctx, AV_LOG_INFO, "Auto hwaccel "
                    "disabled: no device found.\n");
             ist->hwaccel_id = HWACCEL_NONE;
             return 0;
@@ -429,7 +429,7 @@ int hw_device_setup_for_decode(InputStream *ist)
     }
 
     if (!dev) {
-        av_log(ist->dec_ctx, AV_LOG_ERROR, "No device available "
+        AvLog(ist->dec_ctx, AV_LOG_ERROR, "No device available "
                "for decoder: device type %s needed for codec %s.\n",
                av_hwdevice_get_type_name(type), ist->dec->name);
         return err;
@@ -469,7 +469,7 @@ int hw_device_setup_for_encode(OutputStream *ost)
             config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_FRAMES_CTX &&
             (config->pix_fmt == AV_PIX_FMT_NONE ||
              config->pix_fmt == ost->enc_ctx->pix_fmt)) {
-            av_log(ost->enc_ctx, AV_LOG_VERBOSE, "Using input "
+            AvLog(ost->enc_ctx, AV_LOG_VERBOSE, "Using input "
                    "frames context (format %s) with %s encoder.\n",
                    av_get_pix_fmt_name(ost->enc_ctx->pix_fmt),
                    ost->enc->name);
@@ -485,7 +485,7 @@ int hw_device_setup_for_encode(OutputStream *ost)
     }
 
     if (dev) {
-        av_log(ost->enc_ctx, AV_LOG_VERBOSE, "Using device %s "
+        AvLog(ost->enc_ctx, AV_LOG_VERBOSE, "Using device %s "
                "(type %s) with %s encoder.\n", dev->name,
                av_hwdevice_get_type_name(dev->type), ost->enc->name);
         ost->enc_ctx->hw_device_ctx = av_buffer_ref(dev->device_ref);
@@ -517,7 +517,7 @@ static int hwaccel_retrieve_data(AVCodecContext *avctx, AVFrame *input)
 
     err = av_hwframe_transfer_data(output, input, 0);
     if (err < 0) {
-        av_log(avctx, AV_LOG_ERROR, "Failed to transfer data to "
+        AvLog(avctx, AV_LOG_ERROR, "Failed to transfer data to "
                "output frame: %d.\n", err);
         goto fail;
     }
@@ -561,7 +561,7 @@ int hw_device_setup_for_filter(FilterGraph *fg)
         dev = hw_devices[nb_hw_devices - 1];
 
         if (nb_hw_devices > 1)
-            av_log(NULL, AV_LOG_WARNING, "There are %d hardware devices. device "
+            AvLog(NULL, AV_LOG_WARNING, "There are %d hardware devices. device "
                    "%s of type %s is picked for filters by default. Set hardware "
                    "device explicitly with the filter_hw_device option if device "
                    "%s is not usable for filters.\n",

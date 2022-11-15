@@ -37,7 +37,12 @@ class TranscoderClientFrame : public QMainWindow {
   void OnServerDataChanged(const QString &data);
 
  private:
+  void StartServer(const QStringList &command_list);
+
+ private:
   Ui::TranscoderClientFrame *ui_{nullptr};
   ServerDriver *driver_{nullptr};
   ClientIpcService *client_{nullptr};
+
+  QString output_path_;
 };

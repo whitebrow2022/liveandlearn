@@ -75,7 +75,7 @@ void of_write_packet(OutputFile *of, AVPacket *pkt, OutputStream *ost,
             size_t new_size = FFMIN(2 * cur_size, limit);
 
             if (new_size <= cur_size) {
-                av_log(NULL, AV_LOG_ERROR,
+                AvLog(NULL, AV_LOG_ERROR,
                        "Too many packets buffered for output stream %d:%d.\n",
                        ost->file_index, ost->st->index);
                 exit_program(1);
@@ -103,7 +103,7 @@ void of_write_packet(OutputFile *of, AVPacket *pkt, OutputStream *ost,
     if (st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
         if (ost->frame_rate.num && ost->is_cfr) {
             if (pkt->duration > 0)
-                av_log(NULL, AV_LOG_WARNING, "Overriding packet duration by frame rate, this should not happen\n");
+                AvLog(NULL, AV_LOG_WARNING, "Overriding packet duration by frame rate, this should not happen\n");
             pkt->duration = av_rescale_q(1, av_inv_q(ost->frame_rate),
                                          ost->mux_timebase);
         }
@@ -115,7 +115,7 @@ void of_write_packet(OutputFile *of, AVPacket *pkt, OutputStream *ost,
         if (pkt->dts != AV_NOPTS_VALUE &&
             pkt->pts != AV_NOPTS_VALUE &&
             pkt->dts > pkt->pts) {
-            av_log(s, AV_LOG_WARNING, "Invalid DTS: %"PRId64" PTS: %"PRId64" in output stream %d:%d, replacing by guess\n",
+            AvLog(s, AV_LOG_WARNING, "Invalid DTS: %"PRId64" PTS: %"PRId64" in output stream %d:%d, replacing by guess\n",
                    pkt->dts, pkt->pts,
                    ost->file_index, ost->st->index);
             pkt->pts =
@@ -131,14 +131,14 @@ void of_write_packet(OutputFile *of, AVPacket *pkt, OutputStream *ost,
                 int loglevel = max - pkt->dts > 2 || st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO ? AV_LOG_WARNING : AV_LOG_DEBUG;
                 if (exit_on_error)
                     loglevel = AV_LOG_ERROR;
-                av_log(s, loglevel, "Non-monotonous DTS in output stream "
+                AvLog(s, loglevel, "Non-monotonous DTS in output stream "
                        "%d:%d; previous: %"PRId64", current: %"PRId64"; ",
                        ost->file_index, ost->st->index, ost->last_mux_dts, pkt->dts);
                 if (exit_on_error) {
-                    av_log(NULL, AV_LOG_FATAL, "aborting.\n");
+                    AvLog(NULL, AV_LOG_FATAL, "aborting.\n");
                     exit_program(1);
                 }
-                av_log(s, loglevel, "changing to %"PRId64". This may result "
+                AvLog(s, loglevel, "changing to %"PRId64". This may result "
                        "in incorrect timestamps in the output file.\n",
                        max);
                 if (pkt->pts >= pkt->dts)
@@ -155,7 +155,7 @@ void of_write_packet(OutputFile *of, AVPacket *pkt, OutputStream *ost,
     pkt->stream_index = ost->index;
 
     if (debug_ts) {
-        av_log(NULL, AV_LOG_INFO, "muxer <- type:%s "
+        AvLog(NULL, AV_LOG_INFO, "muxer <- type:%s "
                 "pkt_pts:%s pkt_pts_time:%s pkt_dts:%s pkt_dts_time:%s duration:%s duration_time:%s size:%d\n",
                 av_get_media_type_string(ost->enc_ctx->codec_type),
                 av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, &ost->st->time_base),
@@ -197,7 +197,7 @@ static int print_sdp(void)
     }
 
     if (!j) {
-        av_log(NULL, AV_LOG_ERROR, "No output streams in the SDP.\n");
+        AvLog(NULL, AV_LOG_ERROR, "No output streams in the SDP.\n");
         ret = AVERROR(EINVAL);
         goto fail;
     }
@@ -212,7 +212,7 @@ static int print_sdp(void)
     } else {
         ret = avio_open2(&sdp_pb, sdp_filename, AVIO_FLAG_WRITE, &int_cb, NULL);
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Failed to open sdp file '%s'\n", sdp_filename);
+            AvLog(NULL, AV_LOG_ERROR, "Failed to open sdp file '%s'\n", sdp_filename);
             goto fail;
         }
 
@@ -239,7 +239,7 @@ int of_check_init(OutputFile *of)
 
     ret = avformat_write_header(of->ctx, &of->opts);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR,
+        AvLog(NULL, AV_LOG_ERROR,
                "Could not write header for output file #%d "
                "(incorrect codec parameters ?): %s\n",
                of->index, av_err2str(ret));
@@ -254,7 +254,7 @@ int of_check_init(OutputFile *of)
     if (sdp_filename || want_sdp) {
         ret = print_sdp();
         if (ret < 0) {
-            av_log(NULL, AV_LOG_ERROR, "Error writing the SDP.\n");
+            AvLog(NULL, AV_LOG_ERROR, "Error writing the SDP.\n");
             return ret;
         }
     }
@@ -283,7 +283,7 @@ int of_write_trailer(OutputFile *of)
     int ret;
 
     if (!of->header_written) {
-        av_log(NULL, AV_LOG_ERROR,
+        AvLog(NULL, AV_LOG_ERROR,
                "Nothing was written into output file %d (%s), because "
                "at least one of its streams received no packets.\n",
                of->index, of->ctx->url);
@@ -292,7 +292,7 @@ int of_write_trailer(OutputFile *of)
 
     ret = av_write_trailer(of->ctx);
     if (ret < 0) {
-        av_log(NULL, AV_LOG_ERROR, "Error writing trailer of %s: %s\n", of->ctx->url, av_err2str(ret));
+        AvLog(NULL, AV_LOG_ERROR, "Error writing trailer of %s: %s\n", of->ctx->url, av_err2str(ret));
         return ret;
     }
 
