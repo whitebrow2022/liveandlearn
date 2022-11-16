@@ -30,12 +30,13 @@ struct ArgWrapper {
     argc = qstrlist.size();
     argv = new char*[argc];
     for (int i = 0; i < argc; i++) {
-      argv[i] = new char[qstrlist[i].toUtf8().size() + 1];
-      strcpy(argv[i], qstrlist[i].toUtf8().data());
+      auto buflen = qstrlist[i].toUtf8().size() + 1;
+      argv[i] = new char[buflen];
+      snprintf(argv[i], buflen, "%s", qstrlist[i].toUtf8().data());
     }
   }
   ~ArgWrapper() {
-    // TODO: release memory
+    // TODO(liangxu): release memory.
   }
 
   char** argv{nullptr};
@@ -62,13 +63,13 @@ TRANSCODER_API int Run(int argc, char* argv[]) {
   if (QApplication::arguments().size() > 1) {
     auto server_name = QApplication::arguments()[1];
     a.connect(&ServerIpcService::GetInstance(),
-            &ServerIpcService::TranscoderReady, []() {
-              QStringList ffmpeg_args = QApplication::arguments();
-              ffmpeg_args.removeAt(1);
-              qInfo() << "ffmpeg args: " << ffmpeg_args;
-              ArgWrapper args(ffmpeg_args);
-              ffmpeg_main(args.argc, args.argv);
-            });
+              &ServerIpcService::TranscoderReady, []() {
+                QStringList ffmpeg_args = QApplication::arguments();
+                ffmpeg_args.removeAt(1);
+                qInfo() << "ffmpeg args: " << ffmpeg_args;
+                ArgWrapper args(ffmpeg_args);
+                ffmpeg_main(args.argc, args.argv);
+              });
     ServerIpcService::GetInstance().ConnectToServer(server_name);
   } else {
     return 1;

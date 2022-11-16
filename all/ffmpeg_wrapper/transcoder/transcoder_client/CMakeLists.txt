@@ -27,6 +27,31 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 message(STATUS "CMAKE_PREFIX_PATH is ${CMAKE_PREFIX_PATH}")
 
+# ffmpeg
+set(ffmpeg_src_dir ${CMAKE_CURRENT_SOURCE_DIR}/ffmpeg)
+if(WIN32)
+  set(ffmpeg_config_dir ${ffmpeg_src_dir}/win)
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # 64 bits
+    set(ffmpeg_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/ffmpeg/out/win_x64)
+    set(x264_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/x264/out/win_x64)
+  elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    # 32 bits
+    set(ffmpeg_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/ffmpeg/out/win_x86)
+    set(x264_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/x264/out/win_x86)
+  endif()
+  add_definitions(-DOS_WINDOWS)
+elseif(APPLE)
+  set(ffmpeg_config_dir ${ffmpeg_src_dir}/mac)
+  set(ffmpeg_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/ffmpeg/out/mac_x64)
+  set(x264_root_dir ${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/x264/out/mac_x64)
+endif()
+message(STATUS "ffmpeg_config_dir is ${ffmpeg_config_dir}")
+include_directories(${ffmpeg_config_dir})
+include_directories(${ffmpeg_root_dir}/include)
+link_directories(${ffmpeg_root_dir}/lib)
+link_directories(${x264_root_dir}/lib)
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
 
@@ -64,3 +89,65 @@ set_target_properties(${project_name} PROPERTIES
 )
 
 target_link_libraries(${project_name} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+
+if(WIN32)
+  # ffmpeg libs
+  target_link_libraries(${project_name} PRIVATE
+    libavcodec
+    libavdevice
+    libavfilter
+    libavformat
+    libavutil
+    libswresample
+    libswscale
+    libx264
+    )
+  if(EXISTS "${ffmpeg_root_dir}/lib/libpostproc.lib")
+    target_link_libraries(${project_name} PRIVATE
+      libpostproc
+    )
+  endif()
+  # win32 libs
+  target_link_libraries(${project_name} PRIVATE
+    Strmiids
+    Mfuuid
+    Ws2_32
+    Bcrypt
+    Secur32
+    Shlwapi
+    Vfw32
+    )
+elseif(APPLE)
+  # ffmpeg libs
+  target_link_libraries(${project_name} PRIVATE
+    avcodec
+    avdevice
+    avfilter
+    avformat
+    avutil
+    swresample
+    swscale
+    postproc
+    x264
+    )
+  # 
+  #target_link_libraries(${project_name} PRIVATE
+  #  bzlib
+  #  )
+  # macos
+  target_link_libraries(${project_name} PRIVATE
+    "-framework appkit"
+    "-framework avfoundation"
+    "-framework coreimage"
+    "-framework metal"
+    "-framework CoreFoundation"
+    "-framework Security"
+    "-framework VideoDecodeAcceleration"
+    "-framework AudioToolbox"
+    "-framework CoreMedia"
+    "-framework CoreVideo"
+    "-framework VideoToolbox"
+    "-framework CoreAudio"
+    "-framework OpenGL"
+    )
+endif()

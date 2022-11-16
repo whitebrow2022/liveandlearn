@@ -11,6 +11,9 @@ extern "C" {
 #endif
 void WriteToClient(const char *utf8_data);
 void AvLog(void *avcl, int level, const char *fmt, ...);
+void PostStarted();
+void PostProgress(double progress);
+void PostStoped();
 #ifdef __cplusplus
 }
 #endif

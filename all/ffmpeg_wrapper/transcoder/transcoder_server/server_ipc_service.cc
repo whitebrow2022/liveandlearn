@@ -84,12 +84,10 @@ void ServerIpcService::OnSocketStateChanged(
 }
 
 void ServerIpcService::OnSocketConnected() {
-    // start transcoder
-    emit(TranscoderReady());
+  // start transcoder
+  emit(TranscoderReady());
 }
-void ServerIpcService::OnSocketDisconnected() {
-
-}
+void ServerIpcService::OnSocketDisconnected() {}
 
 void ServerIpcService::WriteData(const QString& data) {
   QByteArray block;
@@ -113,7 +111,7 @@ void OutputLog(const char* str) {
 #if defined(_WIN32)
   OutputDebugStringA(str);
 #else
-  printf(str);
+  printf("%s", str);
 #endif
   QJsonObject json_obj;
   json_obj["type"] = 0;
@@ -137,13 +135,16 @@ void AvLog(void* avcl, int level, const char* fmt, ...) {
   }
 
   // crash
-  //{
-  //  va_list arglist;
-  //  va_start(arglist, fmt);
-  //  av_log(avcl, level, fmt, arglist);
-  //  va_end(arglist);
-  //}
-
+#if !defined(WIN32)
+  // TODO(liangxu): fix vsnprintf crash.
+  // mac vsnprintf crash, so use av_log
+  {
+    va_list arglist;
+    va_start(arglist, fmt);
+    av_log(avcl, level, fmt, arglist);
+    va_end(arglist);
+  }
+#else
   if (AV_LOG_DEBUG == level) {
     return;
   }
@@ -168,5 +169,18 @@ void AvLog(void* avcl, int level, const char* fmt, ...) {
     // output to console
     OutputLog(buf.get());
   }
+#endif
 }
+
+void GenerateAndPostProgressJson(double progress) {
+  QJsonObject json_obj;
+  json_obj["type"] = 1;
+  json_obj["progress"] = progress;
+  QJsonDocument doc(json_obj);
+  QString json_str(doc.toJson(QJsonDocument::Indented));
+  ServerIpcService::GetInstance().Write(json_str);
+}
+void PostStarted() { GenerateAndPostProgressJson(0.0); }
+void PostProgress(double progress) { GenerateAndPostProgressJson(progress); }
+void PostStoped() { GenerateAndPostProgressJson(100.0); }
 }

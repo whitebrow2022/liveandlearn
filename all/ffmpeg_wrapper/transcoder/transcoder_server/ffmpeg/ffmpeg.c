@@ -1544,6 +1544,8 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
     const char *hours_sign;
     int ret;
     float t;
+    int64_t max_duration = 0;
+    double curr_progress = 0;
 
     if (!print_stats && !is_last_report && !progress_avio)
         return;
@@ -1572,8 +1574,22 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
     av_bprint_init(&buf_script, 0, AV_BPRINT_SIZE_AUTOMATIC);
     for (i = 0; i < nb_output_streams; i++) {
         float q = -1;
+        int64_t input_duration = 0;
+        int64_t output_duration = 0;
+        int64_t curr_duration = input_duration;
+
         ost = output_streams[i];
         enc = ost->enc_ctx;
+
+        input_duration = input_files[input_streams[ost->source_index]->file_index]->ctx->duration;
+        output_duration = output_files[ost->file_index]->ctx->duration;
+        if (output_duration != INT64_MAX) {
+          curr_duration = output_duration;
+        }
+        if (max_duration < curr_duration) {
+          max_duration = curr_duration;
+        }
+        
         if (!ost->stream_copy)
             q = ost->quality / (float) FF_QP2LAMBDA;
 
@@ -1652,6 +1668,10 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
     }
 
     secs = FFABS(pts) / AV_TIME_BASE;
+    //max_duration = max_duration / AV_TIME_BASE;
+    //curr_progress = (double)secs / max_duration;
+    curr_progress = (double)FFABS(pts) / max_duration;
+    PostProgress(curr_progress);
     us = FFABS(pts) % AV_TIME_BASE;
     mins = secs / 60;
     secs %= 60;
@@ -4578,9 +4598,11 @@ int ffmpeg_main(int argc, char **argv)
             want_sdp = 0;
     }
 
+    PostStarted();
     current_time = ti = get_benchmark_time_stamps();
     if (transcode() < 0)
         exit_program(1);
+    PostStoped();
     if (do_benchmark) {
         int64_t utime, stime, rtime;
         current_time = get_benchmark_time_stamps();

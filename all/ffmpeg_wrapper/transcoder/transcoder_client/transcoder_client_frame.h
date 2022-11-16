@@ -28,8 +28,7 @@ class TranscoderClientFrame : public QMainWindow {
   void closeEvent(QCloseEvent *event) override;
 
  private slots:
-  void OnCreate();
-  void OnConnectToServer();
+  void OnTranscode();
   void Exit();
   void About();
   void OnClickedAndSend();
@@ -38,6 +37,7 @@ class TranscoderClientFrame : public QMainWindow {
 
  private:
   void StartServer(const QStringList &command_list);
+  QString GetSourceVideoPath() const;
 
  private:
   Ui::TranscoderClientFrame *ui_{nullptr};
@@ -45,4 +45,5 @@ class TranscoderClientFrame : public QMainWindow {
   ClientIpcService *client_{nullptr};
 
   QString output_path_;
+  QString last_input_file_;
 };

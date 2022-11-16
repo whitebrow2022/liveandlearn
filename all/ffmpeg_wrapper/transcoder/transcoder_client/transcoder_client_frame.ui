@@ -34,6 +34,13 @@
      </layout>
     </item>
     <item>
+     <widget class="QProgressBar" name="transcodeProgressBar">
+      <property name="value">
+       <number>24</number>
+      </property>
+     </widget>
+    </item>
+    <item>
      <layout class="QVBoxLayout" name="inputLayout">
       <item>
        <widget class="QLabel" name="inputLabel">
@@ -45,7 +52,7 @@
       <item>
        <widget class="QTextEdit" name="inputEdit">
         <property name="readOnly">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -88,10 +95,9 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Transcode</string>
     </property>
-    <addaction name="actionCreate"/>
-    <addaction name="actionConnectToServer"/>
+    <addaction name="actionTranscode"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -111,39 +117,26 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionCreate"/>
-   <addaction name="actionConnectToServer"/>
+   <addaction name="actionTranscode"/>
    <addaction name="separator"/>
    <addaction name="actionAbout"/>
    <addaction name="separator"/>
    <addaction name="actionExit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionCreate">
+  <action name="actionTranscode">
    <property name="icon">
     <iconset>
      <normaloff>:/images/create.png</normaloff>:/images/create.png</iconset>
    </property>
    <property name="text">
-    <string>Create</string>
+    <string>Transcode</string>
    </property>
    <property name="toolTip">
-    <string>Great creativity</string>
+    <string>Transcode Video</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="actionConnectToServer">
-   <property name="icon">
-    <iconset>
-     <normaloff>:/images/create.png</normaloff>:/images/create.png</iconset>
-   </property>
-   <property name="text">
-    <string>Connect</string>
-   </property>
-   <property name="toolTip">
-    <string>Connect to server</string>
    </property>
   </action>
   <action name="actionExit">

@@ -1,4 +1,4 @@
-﻿// Created by liangxu on 2022/11/14.
+// Created by liangxu on 2022/11/14.
 //
 // Copyright (c) 2022 The Transcoder Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +7,7 @@
 #include "transcoder_client_frame.h"
 
 #include <QDesktopServices>
+#include <QDir>
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -16,21 +17,22 @@
 
 #include "client_ipc_service.h"
 #include "server_driver.h"
+#include "transcoder_video_select_dialog.h"
 #include "ui_transcoder_client_frame.h"
+
+constexpr const int kMaxProgressValue = 100;
 
 TranscoderClientFrame::TranscoderClientFrame(QWidget* parent)
     : QMainWindow(parent), ui_(new Ui::TranscoderClientFrame) {
   ui_->setupUi(this);
-  connect(ui_->actionCreate, &QAction::triggered, this,
-          &TranscoderClientFrame::OnCreate);
-  connect(ui_->actionConnectToServer, &QAction::triggered, this,
-          &TranscoderClientFrame::OnConnectToServer);
+  connect(ui_->actionTranscode, &QAction::triggered, this,
+          &TranscoderClientFrame::OnTranscode);
   connect(ui_->actionExit, &QAction::triggered, this,
           &TranscoderClientFrame::Exit);
   connect(ui_->actionAbout, &QAction::triggered, this,
           &TranscoderClientFrame::About);
   connect(ui_->sendButton, &QPushButton::clicked, this,
-          &TranscoderClientFrame::OnClickedAndSend);
+          &TranscoderClientFrame::OnTranscode);
 
   ui_->inputEdit->setText(
       R"(
@@ -39,6 +41,12 @@ TranscoderClientFrame::TranscoderClientFrame(QWidget* parent)
   "output": "C:/Users/xiufeng.liu/Downloads/mp4s/tmppppp.mp4"
 }
 )");
+
+  connect(this, &QObject::destroyed, this, [this]() { ui_ = nullptr; });
+
+  ui_->transcodeProgressBar->setVisible(false);
+  ui_->transcodeProgressBar->setRange(0, kMaxProgressValue);
+  ui_->transcodeProgressBar->setValue(0);
 }
 
 TranscoderClientFrame::~TranscoderClientFrame() { delete ui_; }
@@ -49,22 +57,64 @@ void TranscoderClientFrame::closeEvent(QCloseEvent* event) {
   }
 }
 
-void TranscoderClientFrame::OnCreate() {
-  QStringList ffmpeg_args;
-  ffmpeg_args << "--help";
-  StartServer(ffmpeg_args);
-}
+void TranscoderClientFrame::OnTranscode() {
+  auto CheckVideoExists = [this](const QString& video_path) -> bool {
+    QFileInfo file_info(video_path);
+    if (!(file_info.exists() && file_info.isFile())) {
+      QMessageBox::warning(this, "ffmpeg",
+                           QString("%1 not exists").arg(video_path));
+      return false;
+    }
+    return true;
+  };
+  auto video_path = GetSourceVideoPath();
 
-void TranscoderClientFrame::OnConnectToServer() {
-  if (!(driver_ && driver_->IsServerRunning())) {
+  TranscoderVideoSelectDialog transcode_dlg(this);
+  transcode_dlg.SetLastInputFile(video_path);
+  if (transcode_dlg.exec() == 0) {
     return;
   }
-  if (!client_) {
-    client_ = new ClientIpcService(this);
-    connect(client_, &ClientIpcService::DataChanged, this,
-            &TranscoderClientFrame::OnServerDataChanged);
+
+  video_path = transcode_dlg.GetLastInputFile();
+  if (video_path.isEmpty()) {
+    return;
   }
-  client_->StartServer();
+  if (!CheckVideoExists(video_path)) {
+    return;
+  }
+
+  QString frames_ouput_dir =
+      QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+  QDir dir(frames_ouput_dir);
+  QString sub_dir_name = "mp4s";
+  if (!dir.exists(sub_dir_name)) {
+    dir.mkdir(sub_dir_name);
+  }
+  dir.cd(sub_dir_name);
+  qDebug() << "output dir path is : " << dir.absolutePath();
+  QString curr_time_str =
+      QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
+  QString mp4_file_path =
+      QString("%1/example_%2.mp4").arg(dir.absolutePath()).arg(curr_time_str);
+
+  // convert to json
+  QJsonObject json_obj;
+  json_obj.insert("input", video_path);
+  json_obj.insert("output", mp4_file_path);
+  json_obj.insert("output_video_encoder", transcode_dlg.GetLastVideoEncoder());
+  json_obj.insert("output_audio_encoder", transcode_dlg.GetLastAudioEncoder());
+  json_obj.insert("output_format", transcode_dlg.GetLastFileFormat());
+  json_obj.insert("output_width", transcode_dlg.GetSelectedWidth());
+  json_obj.insert("output_height", transcode_dlg.GetSelectedHeight());
+  json_obj.insert("output_start_time", transcode_dlg.GetVideoStartTime());
+  json_obj.insert("output_record_time", transcode_dlg.GetVideoRecordTime());
+  json_obj.insert("output_video_bitrate", transcode_dlg.GetVideoBitrate());
+  json_obj.insert("output_audio_bitrate", transcode_dlg.GetAudioBitrate());
+  QJsonDocument doc(json_obj);
+  QString ffmpeg_param(doc.toJson(QJsonDocument::Indented));
+  ui_->inputEdit->setText(ffmpeg_param);
+
+  OnClickedAndSend();
 }
 
 void TranscoderClientFrame::Exit() { QCoreApplication::quit(); }
@@ -85,9 +135,6 @@ void TranscoderClientFrame::OnClickedAndSend() {
   client_->StartServer();
 
   QString ffmpeg_arg_str = ui_->inputEdit->toPlainText();
-  // if (client_) {
-  //   client_->Write(ffmpeg_arg_str);
-  // }
   ui_->outputEdit->setText(ffmpeg_arg_str);
   ui_->outputEdit->append("\n");
 
@@ -118,20 +165,96 @@ void TranscoderClientFrame::OnClickedAndSend() {
 
   QStringList arg_list;
   arg_list.append(client_->GetServerName());
+  // global parameter
   arg_list.append("-y");
+  // input parameter
   arg_list.append("-i");
   arg_list.append(input_path);
-  arg_list.append("-c:v");
-  arg_list.append("h264");
-  arg_list.append("-c:a");
-  arg_list.append("aac");
+  // output parameter
+  if (json_obj.contains("output_video_encoder")) {
+    arg_list.append("-c:v");
+    arg_list.append(json_obj.value("output_video_encoder").toString("h264"));
+  }
+  if (json_obj.contains("output_audio_encoder")) {
+    arg_list.append("-c:a");
+    arg_list.append(json_obj.value("output_audio_encoder").toString("aac"));
+  }
+  if (json_obj.contains("output_format")) {
+    arg_list.append("-f");
+    arg_list.append(json_obj.value("output_format").toString("mp4"));
+  }
+  if (json_obj.contains("output_start_time") &&
+      json_obj.value("output_start_time").toDouble(0) != 0) {
+    arg_list.append("-ss");
+    arg_list.append(
+        QString("%1").arg(json_obj.value("output_start_time").toDouble(0)));
+  }
+  if (json_obj.contains("output_record_time") &&
+      json_obj.value("output_record_time").toDouble(0) != 0) {
+    arg_list.append("-t");
+    arg_list.append(
+        QString("%1").arg(json_obj.value("output_record_time").toDouble(0)));
+  }
+  if (json_obj.contains("output_stop_time") &&
+      json_obj.value("output_stop_time").toDouble(0) != 0) {
+    arg_list.append("-to");
+    arg_list.append(
+        QString("%1").arg(json_obj.value("output_stop_time").toDouble(0)));
+  }
+  int output_video_width = -1;
+  if (json_obj.contains("output_width")) {
+    output_video_width = json_obj.value("output_width").toInt(-1);
+  }
+  int output_video_height = -1;
+  if (json_obj.contains("output_height")) {
+    output_video_height = json_obj.value("output_height").toInt(-1);
+  }
+  if (!(output_video_width == -1 && output_video_height == -1)) {
+    arg_list.append("-filter:v");
+    arg_list.append(QString("scale=%1:%2")
+                        .arg(output_video_width)
+                        .arg(output_video_height));
+  }
+  if (json_obj.contains("output_video_bitrate") &&
+      !json_obj.value("output_video_bitrate").toString("").isEmpty()) {
+    arg_list.append("-b:v");
+    arg_list.append(json_obj.value("output_video_bitrate").toString("128K"));
+  }
+  if (json_obj.contains("output_audio_bitrate") &&
+      !json_obj.value("output_audio_bitrate").toString("").isEmpty()) {
+    arg_list.append("-b:a");
+    arg_list.append(json_obj.value("output_audio_bitrate").toString("128K"));
+  }
   arg_list.append(output_path);
   output_path_ = output_path;
   StartServer(arg_list);
+
+  ui_->actionTranscode->setEnabled(false);
+  ui_->sendButton->setEnabled(false);
+  ui_->transcodeProgressBar->setVisible(true);
+  ui_->transcodeProgressBar->setValue(0);
 }
 
 void TranscoderClientFrame::OnServerDataChanged(const QString& data) {
   ui_->outputEdit->append(data);
+
+  QJsonParseError err;
+  auto doc = QJsonDocument::fromJson(data.toUtf8(), &err);
+  if (err.error != QJsonParseError::NoError) {
+    qDebug() << __FUNCTION__ << "parse err: " << err.errorString()
+             << "; data: " << data;
+    return;
+  }
+  QJsonObject json_obj = doc.object();
+  if (json_obj.contains("type")) {
+    auto type = json_obj.value("type").toInt(0);
+    if (type == 1) {
+      if (json_obj.contains("progress")) {
+        auto progess = json_obj.value("progress").toDouble(0.0);
+        ui_->transcodeProgressBar->setValue(progess * kMaxProgressValue);
+      }
+    }
+  }
 }
 
 void TranscoderClientFrame::StartServer(const QStringList& command_list) {
@@ -140,13 +263,20 @@ void TranscoderClientFrame::StartServer(const QStringList& command_list) {
   }
   if (!driver_) {
     driver_ = new ServerDriver(this);
-    connect(driver_, &ServerDriver::ServerStarted, this, [this]() {
-      // TODO: fix unconnected, client as server?
-      //QTimer::singleShot(1000, this, &TranscoderClientFrame::OnConnectToServer);
-    });
+    connect(driver_, &ServerDriver::ServerStarted, this,
+            [this]() { qDebug() << "transcoder started!"; });
     connect(driver_, &ServerDriver::ServerFinished, this, [this](bool normal) {
+      qDebug() << "transcoder finished!";
       driver_->deleteLater();
       driver_ = nullptr;
+
+      if (!ui_) {
+        return;
+      }
+
+      ui_->actionTranscode->setEnabled(true);
+      ui_->sendButton->setEnabled(true);
+      ui_->transcodeProgressBar->setVisible(false);
 
       if (normal) {
         QMetaObject::invokeMethod(
@@ -172,4 +302,19 @@ void TranscoderClientFrame::StartServer(const QStringList& command_list) {
     });
   }
   driver_->StartServer(command_list);
+}
+
+QString TranscoderClientFrame::GetSourceVideoPath() const {
+  QString video_path = "D:/osknief/imsdk/hevc_8k60P_bilibili_1.mp4";
+  QFileInfo file_info(video_path);
+  if (!(file_info.exists() && file_info.isFile())) {
+#if defined(PROJECT_RESOURCES_DIR)
+    video_path = PROJECT_RESOURCES_DIR;
+    video_path.append("/example.mov");
+#endif
+    if (!last_input_file_.isEmpty()) {
+      video_path = last_input_file_;
+    }
+  }
+  return video_path;
 }
