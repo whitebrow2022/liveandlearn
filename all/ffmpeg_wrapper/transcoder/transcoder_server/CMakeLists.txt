@@ -154,4 +154,7 @@ elseif(APPLE)
     "-framework CoreAudio"
     "-framework OpenGL"
     )
+  set_target_properties(${project_name} PROPERTIES
+    XCODE_ATTRIBUTE_INSTALL_PATH @executable_path/../Frameworks
+    )
 endif()

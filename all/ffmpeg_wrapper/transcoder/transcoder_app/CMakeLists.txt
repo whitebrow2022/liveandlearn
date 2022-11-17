@@ -89,3 +89,43 @@ if(WIN32)
 
   set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${project_name})
 endif()
+if(APPLE)
+  # TODO(liangxu): fix dmg not run
+  set_target_properties(${project_name} PROPERTIES
+    INSTALL_RPATH @executable_path/../Frameworks  # Assumes macOS bundle layout
+    # CMake 3.20 or later required for the following
+  )
+  set(app_bundle_contents_dir "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${project_name}.app/Contents")
+  set(app_bundle_frameworks_dir "${app_bundle_contents_dir}/Frameworks")
+  add_custom_command(TARGET ${project_name} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/libtranscoder_server.dylib ${app_bundle_frameworks_dir}/libtranscoder_server.dylib
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/libtranscoder_client.dylib ${app_bundle_frameworks_dir}/libtranscoder_client.dylib
+    )
+  if (EXISTS ${QT_DEP_DIR})
+    add_custom_command(TARGET ${project_name} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtCore.framework "${app_bundle_frameworks_dir}/QtCore.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtWidgets.framework "${app_bundle_frameworks_dir}/QtWidgets.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtNetwork.framework "${app_bundle_frameworks_dir}/QtNetwork.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtGui.framework "${app_bundle_frameworks_dir}/QtGui.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtDBus.framework "${app_bundle_frameworks_dir}/QtDBus.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtPrintSupport.framework "${app_bundle_frameworks_dir}/QtPrintSupport.framework"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/plugins/platforms "${app_bundle_contents_dir}/plugins/platforms"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/plugins/styles "${app_bundle_contents_dir}/plugins/styles"
+      )
+
+    ## Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
+    install(TARGETS ${project_name} 
+      BUNDLE DESTINATION . COMPONENT Runtime
+      )
+    ## Note Mac specific extension .app
+    #set(APPS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${project_name}.app")
+    #
+    ## Directories to look for dependencies
+    #set(DIRS ${CMAKE_PREFIX_PATH})
+    #install(CODE "include(BundleUtilities) 
+    #  fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
+    
+    set(CPACK_GENERATOR "DRAGNDROP")
+    include(CPack)
+  endif()
+endif()

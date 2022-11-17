@@ -1,4 +1,4 @@
-﻿// Created by liangxu on 2022/11/14.
+// Created by liangxu on 2022/11/14.
 //
 // Copyright (c) 2022 The Transcoder Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -135,7 +135,7 @@ void AvLog(void* avcl, int level, const char* fmt, ...) {
   }
 
   // crash
-#if !defined(WIN32)
+#if 0
   // TODO(liangxu): fix vsnprintf crash.
   // mac vsnprintf crash, so use av_log
   {
@@ -153,13 +153,19 @@ void AvLog(void* avcl, int level, const char* fmt, ...) {
   {
     va_list arglist;
     va_start(arglist, fmt);
+#if defined(Q_OS_MACOS)
+    int size_s = 4096;
+#else
     int size_s = arglist ? (std::vsnprintf(nullptr, 0, fmt, arglist) + 1)
                          : strlen(fmt) + 1;
     if (size_s <= 0) {
+      va_end(arglist);
       return;
     }
+#endif
     auto size = static_cast<size_t>(size_s);
     std::unique_ptr<char[]> buf = std::make_unique<char[]>(size);
+    memset(buf.get(), 0, size);
     if (arglist) {
       std::vsnprintf(buf.get(), size, fmt, arglist);
     } else {

@@ -12,3 +12,11 @@
   "output": "C:/Users/knief/Downloads/mp4s/tmppppp.mp4"
 }
 ```
+
+## Mac: cmake打包dmg
+- 如果打包的程序不能运行，用下面这种方法来查看原因：
+   - `export QT_DEBUG_PLUGINS=1`
+   - 运行app: `xxx_app.app/Contents/MacOS/xxx_app`
+   - [参考](https://forum.qt.io/topic/133532/how-to-solve-could-not-load-the-qt-platform-plugin-cocoa-in-even-though-it-was-found/2)
+- 检查签名：
+   - `codesign -dv --verbose=4 /Path/To/Application.app`
