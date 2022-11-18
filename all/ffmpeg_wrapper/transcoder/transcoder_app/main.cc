@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   QString libname;
   {
     QApplication a(argc, argv);
-    qDebug() << "app: " << QCoreApplication::applicationDirPath();
+    qInfo() << "app: " << QCoreApplication::applicationDirPath();
     QString framework_dir =
         QString("%1/../Frameworks").arg(QCoreApplication::applicationDirPath());
     libname = QString("%1/libtranscoder_client.dylib").arg(framework_dir);
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     libname = "transcoder_server";
   }
 #endif
-  qDebug() << "libanme: " << libname;
+  qInfo() << "libanme: " << libname;
   QLibrary runlib(libname);
   RunFuncType run_fun = (RunFuncType)runlib.resolve("Run");
   if (!run_fun) {

@@ -63,31 +63,57 @@ set_target_properties(${project_name} PROPERTIES
 )
 
 if(WIN32)
-  list(APPEND qt_dll_lists "Qt5Core" "Qt5Gui" "Qt5Widgets" "Qt5WinExtras" 
-      "Qt5Concurrent" 
-      "Qt5Network" 
-      "Qt5WebEngineCore" "Qt5WebEngine" "Qt5WebEngineWidgets" "Qt5Quick" "Qt5QuickWidgets" "Qt5PrintSupport" "Qt5Positioning" "Qt5WebChannel" "Qt5Qml" "Qt5QmlModels"
-      )
-  
-  # Debug configuration, copy qt runtime to bin
-  if (PACKAGE)
-    foreach(qt_dll_name IN LISTS qt_dll_lists)
-      file(COPY ${QT_MSVC_DIR}/bin/${qt_dll_name}d.dll DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug")
-    endforeach()
-    file(COPY "${QT_MSVC_DIR}/plugins/platforms/qwindowsd.dll" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/plugins/platforms/")
-    file(COPY "${QT_MSVC_DIR}/bin/QtWebEngineProcessd.exe" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/")
-    file(COPY "${QT_MSVC_DIR}/resources/icudtl.dat" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")
-    file(COPY "${QT_MSVC_DIR}/resources/qtwebengine_resources.pak" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/resources/")
-    file(COPY "${QT_MSVC_DIR}/translations/qtwebengine_locales" DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug/translations/")
-  endif()
-endif()
-
-if(WIN32)
   set_target_properties(${project_name} PROPERTIES 
     VS_DEBUGGER_ENVIRONMENT "PATH=%PATH%;${QT_MSVC_DIR}/bin;${QT_MSVC_DIR}/plugins;${QT_MSVC_DIR}/translations;${QT_MSVC_DIR}/resources"
     )
 
   set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${project_name})
+
+  set(app_bin_dir "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>")
+  if (EXISTS ${QT_DEP_DIR})
+    set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
+    include(InstallRequiredSystemLibraries)
+    #set(CPACK_CREATE_DESKTOP_LINKS transcoder_app)
+    #set(CPACK_NSIS_MODIFY_PATH ON)
+    #set(CPACK_NSIS_INSTALLED_ICON_NAME "transcoder_app.exe")
+    set(CPACK_NSIS_DISPLAY_NAME transcoder)
+    set(CPACK_NSIS_EXECUTABLES_DIRECTORY .)
+    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL TRUE)
+    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+        CreateShortCut \\\"$DESKTOP\\\\${project_name}.lnk\\\" \\\"$INSTDIR\\\\${project_name}.exe\\\"
+    ")
+    set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+        Delete \\\"$DESKTOP\\\\${project_name}.lnk\\\"
+    ")
+    add_custom_command(TARGET ${project_name} POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/bin/Qt5Core.dll "${app_bin_dir}/Qt5Core.dll"
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/bin/Qt5Widgets.dll "${app_bin_dir}/Qt5Widgets.dll"
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/bin/Qt5Network.dll "${app_bin_dir}/Qt5Network.dll"
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/bin/Qt5Gui.dll "${app_bin_dir}/Qt5Gui.dll"
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/bin/Qt5WinExtras.dll "${app_bin_dir}/Qt5WinExtras.dll"
+      COMMAND ${CMAKE_COMMAND} -E copy ${QT_DEP_DIR}/plugins/platforms/qwindows.dll "${app_bin_dir}/plugins/platforms/qwindows.dll"
+      )
+
+    ## Destination paths below are relative to ${CMAKE_INSTALL_PREFIX}
+    install(TARGETS ${project_name} 
+      RUNTIME DESTINATION . 
+      )
+    install(
+      DIRECTORY "${app_bin_dir}/"
+      DESTINATION .
+      FILES_MATCHING PATTERN "*.dll"
+      )
+    ## Note Mac specific extension .app
+    #set(APPS "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>/${project_name}.app")
+    #
+    ## Directories to look for dependencies
+    #set(DIRS ${CMAKE_PREFIX_PATH})
+    #install(CODE "include(BundleUtilities) 
+    #  fixup_bundle(\"${APPS}\" \"\" \"${DIRS}\")")
+    
+    set(CPACK_GENERATOR "NSIS")
+    include(CPack)
+  endif()
 endif()
 if(APPLE)
   # TODO(liangxu): fix dmg not run
