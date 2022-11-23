@@ -251,3 +251,5 @@ xcuserdata/
 SharedlibNameCommon.xcconfig
 /*.xcworkspace
 /*.xcodeproj
+/build/
+/package/

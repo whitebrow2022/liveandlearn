@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Generate 'macOS' project for %SharedlibName%.
+# Generate 'macOS' project for sharedlib_name.
 
 bash_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 

@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QTranslator>
 
+#include "sharedlib_name_base/log/log_writer.h"
 #include "sharedlib_name_frame.h"
 
 void LoadTranslation(QTranslator* translator, const QString& file_name,
@@ -39,10 +40,16 @@ void LoadTranslations(QTranslator* translator) {
 
 int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
+  log_info << "sharedlib_name_app start:";
   // multiple langs
   // QTranslator translator[3];
   // LoadTranslations(translator);
+
   SharedlibNameFrame w;
+  QObject::connect(&a, &QApplication::aboutToQuit, []() {
+    // exit app
+    log_info << "sharedlib_name_app about to quit!";
+  });
   w.show();
   return a.exec();
 }

@@ -11,7 +11,17 @@ rem %1-%9 refer to command line arguments after the batch file name. %0 refers t
 set batch_file=%0
 
 echo Generate sharedlib_name
-set qt_msvc_path="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
+
+set qt_lts_dir="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
+if exist %qt_lts_dir%\ (
+  set QT_DIR="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
+  set QTDIR="C:\Qt\Qt5.15.2\5.15.2\msvc2019_64"
+) else (
+  echo "need set QT_DIR env"
+  exit 0
+)
+
+set qt_msvc_path=%QT_DIR%
 set vs_qt_dir=%bat_dir%\build\win_x64
 cmake -S %bat_dir% -B %vs_qt_dir% -G "Visual Studio 17 2022" -A x64 -T v143 -DCMAKE_PREFIX_PATH=%qt_msvc_path% -DQT_MSVC_DIR="%qt_msvc_path%" 
 set cmake_generate_err=%ERRORLEVEL%
