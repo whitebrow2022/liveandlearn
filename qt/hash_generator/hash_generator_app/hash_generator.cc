@@ -6,6 +6,8 @@
 
 #include "hash_generator.h"
 
+#include <openssl/md5.h>
+
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QDir>
@@ -17,31 +19,16 @@
 #include "openssl/sha.h"
 
 namespace {
+
+// hash sha256
 void Sha256HashString(unsigned char hash[SHA256_DIGEST_LENGTH],
-                      char outputBuffer[65]) {
-  int i = 0;
-
-  for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-    sprintf(outputBuffer + (i * 2), "%02x", hash[i]);  // NOLINT
+                      char output_buffer[65]) {
+  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+    sprintf(output_buffer + (i * 2), "%02x", hash[i]);  // NOLINT
   }
-
-  outputBuffer[64] = 0;
+  output_buffer[64] = 0;
 }
-
-void Sha256String(char *string, char outputBuffer[65]) {
-  unsigned char hash[SHA256_DIGEST_LENGTH];
-  SHA256_CTX sha256;
-  SHA256_Init(&sha256);
-  SHA256_Update(&sha256, string, strlen(string));
-  SHA256_Final(hash, &sha256);
-  int i = 0;
-  for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
-    sprintf(outputBuffer + (i * 2), "%02x", hash[i]);  // NOLINT
-  }
-  outputBuffer[64] = 0;
-}
-
-bool Sha256File(const char *path, char outputBuffer[65]) {
+bool Sha256File(const char *path, char output_buffer[65]) {
   FILE *file = fopen(path, "rb");
   if (!file) {
     return false;
@@ -49,20 +36,53 @@ bool Sha256File(const char *path, char outputBuffer[65]) {
   unsigned char hash[SHA256_DIGEST_LENGTH];
   SHA256_CTX sha256;
   SHA256_Init(&sha256);
-  const int bufSize = 32768;
+  constexpr const int kBufSize = 32768;
   std::unique_ptr<unsigned char[]> unique_buff =
-      std::make_unique<unsigned char[]>(bufSize);
+      std::make_unique<unsigned char[]>(kBufSize);
   unsigned char *buffer = unique_buff.get();
   int bytesRead = 0;
   if (!buffer) {
     return false;
   }
-  while ((bytesRead = fread(buffer, 1, bufSize, file))) {
+  while ((bytesRead = fread(buffer, 1, kBufSize, file))) {
     SHA256_Update(&sha256, buffer, bytesRead);
   }
   SHA256_Final(hash, &sha256);
 
-  Sha256HashString(hash, outputBuffer);
+  Sha256HashString(hash, output_buffer);
+  fclose(file);
+  return true;
+}
+
+// hash md5
+void Md5HashString(unsigned char hash[MD5_DIGEST_LENGTH],
+                   char output_buffer[33]) {
+  for (int i = 0; i < MD5_DIGEST_LENGTH; i++) {
+    sprintf(output_buffer + (i * 2), "%02x", hash[i]);  // NOLINT
+  }
+  output_buffer[32] = 0;
+}
+bool Md5File(const char *path, char output_buffer[33]) {
+  FILE *file = fopen(path, "rb");
+  if (!file) {
+    return false;
+  }
+  unsigned char hash[MD5_DIGEST_LENGTH];
+  MD5_CTX md5;
+  MD5_Init(&md5);
+  constexpr const int kBufSize = 32768;
+  std::unique_ptr<unsigned char[]> unique_buff =
+      std::make_unique<unsigned char[]>(kBufSize);
+  unsigned char *buffer = unique_buff.get();
+  int bytesRead = 0;
+  if (!buffer) {
+    return false;
+  }
+  while ((bytesRead = fread(buffer, 1, kBufSize, file))) {
+    MD5_Update(&md5, buffer, bytesRead);
+  }
+  MD5_Final(hash, &md5);
+  Md5HashString(hash, output_buffer);
   fclose(file);
   return true;
 }
@@ -74,16 +94,15 @@ bool QtSha256File(const char *path, char output_buffer[65]) {
   if (!file) {
     return false;
   }
-
-  const int bufSize = 32768;
-  std::unique_ptr<char[]> unique_buff = std::make_unique<char[]>(bufSize);
+  constexpr const int kBufSize = 32768;
+  std::unique_ptr<char[]> unique_buff = std::make_unique<char[]>(kBufSize);
   char *buffer = unique_buff.get();
   int bytesRead = 0;
   if (!buffer) {
     return false;
   }
   QCryptographicHash cryp_hash(QCryptographicHash::Sha256);
-  while ((bytesRead = fread(buffer, 1, bufSize, file))) {
+  while ((bytesRead = fread(buffer, 1, kBufSize, file))) {
     cryp_hash.addData(buffer, bytesRead);
   }
   auto hash = cryp_hash.result().toHex().toStdString();
@@ -102,20 +121,25 @@ void HashWorker::DoWork(const QString &file_path) {
     // ssl calc hash
     log_info << "ssl hash_generator_app hash (" << file_path.toStdString()
              << ") start:";
+    auto time_start = std::chrono::high_resolution_clock::now();
     char hash_buf[65] = {0};
     if (Sha256File(file_path.toStdString().c_str(), hash_buf)) {
       result = QString(hash_buf);
       log_info << "ssl hash_generator_app hash (" << file_path.toStdString()
                << ") hash: " << hash_buf;
     }
+    auto time_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
     log_info << "ssl hash_generator_app hash (" << file_path.toStdString()
-             << ") end!";
+             << ") end, spend time:" << static_cast<int>(elapsed.count())
+             << "ms";
   }
   {
     // qt calc hash
     QCryptographicHash cryp_hash(QCryptographicHash::Sha256);
     log_info << "qt hash_generator_app hash (" << file_path.toStdString()
              << ") start:";
+    auto time_start = std::chrono::high_resolution_clock::now();
     QFile qfile(file_path);
     if (qfile.open(QFile::ReadOnly)) {
       if (cryp_hash.addData(&qfile)) {
@@ -125,11 +149,16 @@ void HashWorker::DoWork(const QString &file_path) {
                  << ") hash: " << hash;
       }
     }
+    auto time_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
     log_info << "qt hash_generator_app hash (" << file_path.toStdString()
-             << ") end!";
+             << ") end, spend time:" << static_cast<int>(elapsed.count())
+             << "ms";
   }
+#if 0
   {
     // qt2 calc hash
+    auto time_start = std::chrono::high_resolution_clock::now();
     log_info << "qt2 hash_generator_app hash (" << file_path.toStdString()
              << ") start:";
     char hash_buf[65] = {0};
@@ -138,8 +167,51 @@ void HashWorker::DoWork(const QString &file_path) {
       log_info << "qt2 hash_generator_app hash (" << file_path.toStdString()
                << ") hash: " << hash_buf;
     }
+    auto time_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
     log_info << "qt2 hash_generator_app hash (" << file_path.toStdString()
-             << ") end!";
+             << ") end, spend time:" << static_cast<int>(elapsed.count())
+             << "ms";
+  }
+#endif
+
+  {
+    // ssl calc md5
+    log_info << "ssl hash_generator_app md5 (" << file_path.toStdString()
+             << ") start:";
+    auto time_start = std::chrono::high_resolution_clock::now();
+    char hash_buf[33] = {0};
+    if (Md5File(file_path.toStdString().c_str(), hash_buf)) {
+      result = QString(hash_buf);
+      log_info << "ssl hash_generator_app md5 (" << file_path.toStdString()
+               << ") hash: " << hash_buf;
+    }
+    auto time_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
+    log_info << "ssl hash_generator_app md5 (" << file_path.toStdString()
+             << ") end, spend time:" << static_cast<int>(elapsed.count())
+             << "ms";
+  }
+  {
+    // qt calc md5
+    QCryptographicHash cryp_hash(QCryptographicHash::Md5);
+    log_info << "qt hash_generator_app md5 (" << file_path.toStdString()
+             << ") start:";
+    auto time_start = std::chrono::high_resolution_clock::now();
+    QFile qfile(file_path);
+    if (qfile.open(QFile::ReadOnly)) {
+      if (cryp_hash.addData(&qfile)) {
+        auto hash = cryp_hash.result().toHex().toStdString();
+        result = QString(hash.c_str());
+        log_info << "qt hash_generator_app md5 (" << file_path.toStdString()
+                 << ") hash: " << hash;
+      }
+    }
+    auto time_end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
+    log_info << "qt hash_generator_app md5 (" << file_path.toStdString()
+             << ") end, spend time:" << static_cast<int>(elapsed.count())
+             << "ms";
   }
   emit HashReady(result);
 }
