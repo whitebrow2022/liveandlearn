@@ -5,9 +5,12 @@
 // found in the LICENSE file.
 
 #include <QApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTranslator>
+#include <QDir>
 
 #include "sharedlib_name_base/log/log_writer.h"
 #include "sharedlib_name_frame.h"
@@ -40,6 +43,18 @@ void LoadTranslations(QTranslator* translator) {
 
 int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
+  QString app_data_dir =
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  QString curr_time_str =
+      QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
+  QString log_dir = QString("%1/log").arg(app_data_dir);
+  QString log_path = QString("%1/sharedlib_name_app_%2.log").arg(log_dir)
+                         .arg(curr_time_str);
+  QDir log_qdir(log_dir);
+  if (!log_qdir.exists()) {
+    log_qdir.mkpath(".");
+  }
+  SHAREDLIB_NAME_BASE::InitLog(log_path.toStdString().c_str());
   log_info << "sharedlib_name_app start:";
   // multiple langs
   // QTranslator translator[3];
@@ -51,5 +66,7 @@ int main(int argc, char* argv[]) {
     log_info << "sharedlib_name_app about to quit!";
   });
   w.show();
-  return a.exec();
+  auto ret = a.exec();
+  SHAREDLIB_NAME_BASE::UnInitLog();
+  return ret;
 }

@@ -6,6 +6,8 @@
 
 #include "sharedlib_name_base/log/log_writer.h"
 
+#include "log_worker.h"
+
 #if defined(OS_WINDOWS)
 #include <Windows.h>
 #include <debugapi.h>
@@ -152,13 +154,26 @@ void PlatformOutputLog(const std::string& log_msg) {
 
 BEGIN_NAMESPACE_SHAREDLIB_NAME_BASE
 
+namespace {
+LogWorker log_work_;
+};
+SHAREDLIB_NAME_BASE_API void InitLog(const char* log_path) {
+  if (!log_path || strlen(log_path) == 0) {
+    return;
+  }
+  log_work_.InitLog(log_path);
+}
+SHAREDLIB_NAME_BASE_API void UnInitLog() { log_work_.UninitLog(); }
+
 SHAREDLIB_NAME_BASE_API int32_t GetLogLevel() { return log_level_debug; }
 SHAREDLIB_NAME_BASE_API void OutputLog(int32_t log_level, const char* file_name,
                                        int32_t code_line, const char* func_name,
                                        const std::string& content) {
   if (log_level > log_level_begin && log_level < log_level_end) {
-    PlatformOutputLog(
-        GenerateOutputLog(log_level, file_name, code_line, func_name, content));
+    auto log_msg =
+        GenerateOutputLog(log_level, file_name, code_line, func_name, content);
+    PlatformOutputLog(log_msg);
+    log_work_.Write(log_msg);
   }
 }
 

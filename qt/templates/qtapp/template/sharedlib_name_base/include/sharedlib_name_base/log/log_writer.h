@@ -11,6 +11,9 @@
 
 BEGIN_NAMESPACE_SHAREDLIB_NAME_BASE
 
+SHAREDLIB_NAME_BASE_API void InitLog(const char* log_path);
+SHAREDLIB_NAME_BASE_API void UnInitLog();
+
 SHAREDLIB_NAME_BASE_API int32_t GetLogLevel();
 SHAREDLIB_NAME_BASE_API void OutputLog(int32_t log_level, const char* file_name,
                                        int32_t code_line, const char* func_name,
