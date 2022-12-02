@@ -1,0 +1,10 @@
+# 
+executable("base_demo") {
+  sources = [
+    "base_demo.cc",
+  ]
+  deps = [
+    "//base",
+    "//build:branding_buildflags",
+  ]
+}
