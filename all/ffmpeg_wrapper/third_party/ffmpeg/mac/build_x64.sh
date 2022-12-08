@@ -16,7 +16,7 @@ echo ${PKG_CONFIG_PATH}
 # x264 need gpl
 # build and install ffmpeg
 # m1 build x64
-./configure --enable-cross-compile --arch=x86_64 --cc='clang -arch x86_64' --enable-static --disable-shared --disable-debug --disable-doc --disable-x86asm --enable-gpl  --enable-libx264 --disable-programs --prefix=${out_dir}/mac_x64 --disable-zlib --disable-iconv --disable-bzlib
+./configure --enable-cross-compile --cc='clang -arch x86_64' --enable-static --disable-shared --disable-debug --disable-doc --disable-asm --enable-gpl --enable-libx264 --disable-ffplay --disable-ffprobe --prefix=${out_dir}/mac_x64 --disable-zlib --disable-iconv --disable-bzlib
 make install
 
 # cd to curr bash dir
