@@ -17,6 +17,7 @@
 
 #include "client_ipc_service.h"
 #include "server_driver.h"
+#include "transcoder_base/log/log_writer.h"
 #include "transcoder_video_select_dialog.h"
 #include "ui_transcoder_client_frame.h"
 
@@ -170,6 +171,7 @@ void TranscoderClientFrame::OnClickedAndSend() {
   // input parameter
   arg_list.append("-i");
   arg_list.append(input_path);
+  last_input_file_ = input_path;
   // output parameter
   if (json_obj.contains("output_video_encoder")) {
     arg_list.append("-c:v");
@@ -263,10 +265,19 @@ void TranscoderClientFrame::StartServer(const QStringList& command_list) {
   }
   if (!driver_) {
     driver_ = new ServerDriver(this);
-    connect(driver_, &ServerDriver::ServerStarted, this,
-            [this]() { qDebug() << "transcoder started!"; });
+    connect(driver_, &ServerDriver::ServerStarted, this, [this]() {
+      log_info << "transcoder started!";
+      transcode_time_start_ = std::chrono::high_resolution_clock::now();
+    });
     connect(driver_, &ServerDriver::ServerFinished, this, [this](bool normal) {
-      qDebug() << "transcoder finished!";
+      auto time_end = std::chrono::high_resolution_clock::now();
+      std::chrono::duration<double, std::milli> elapsed =
+          time_end - transcode_time_start_;
+      auto spend_secs = static_cast<uint32_t>(elapsed.count()) / 1000;
+      log_info << "transcoder transcode " << last_input_file_.toStdString()
+               << " to " << output_path_.toStdString()
+               << " , spend time: " << spend_secs << " sec";
+      log_info << "transcoder finished!";
       driver_->deleteLater();
       driver_ = nullptr;
 
@@ -299,22 +310,29 @@ void TranscoderClientFrame::StartServer(const QStringList& command_list) {
       } else {
         ui_->outputEdit->append("transcode failed!");
       }
+
+      QMetaObject::invokeMethod(
+          this,
+          [this, spend_secs]() {
+            QString spend_time_str =
+                QString(
+                    "transcoder transcode %1 to %2, spend time: %3 seconds!")
+                    .arg(last_input_file_)
+                    .arg(output_path_)
+                    .arg(spend_secs);
+            ui_->outputEdit->append("\n\n");
+            ui_->outputEdit->append(spend_time_str);
+          },
+          Qt::QueuedConnection);
     });
   }
   driver_->StartServer(command_list);
 }
 
 QString TranscoderClientFrame::GetSourceVideoPath() const {
-  QString video_path = "D:/osknief/imsdk/hevc_8k60P_bilibili_1.mp4";
-  QFileInfo file_info(video_path);
-  if (!(file_info.exists() && file_info.isFile())) {
-#if defined(PROJECT_RESOURCES_DIR)
-    video_path = PROJECT_RESOURCES_DIR;
-    video_path.append("/example.mov");
-#endif
-    if (!last_input_file_.isEmpty()) {
-      video_path = last_input_file_;
-    }
+  QString video_path;
+  if (!last_input_file_.isEmpty()) {
+    video_path = last_input_file_;
   }
   return video_path;
 }

@@ -32,6 +32,7 @@ if(APPLE)
   set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "")
 endif()
 
+add_subdirectory(transcoder_base)
 add_subdirectory(transcoder_app)
 add_subdirectory(transcoder_client)
 add_subdirectory(transcoder_server)

@@ -5,12 +5,16 @@
 // found in the LICENSE file.
 
 #include <QApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTranslator>
+#include <QDir>
 
 #include "server_ipc_service.h"
 #include "transcoder/transcoder_export.h"
+#include "transcoder_base/log/log_writer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,6 +64,25 @@ TRANSCODER_API int Run(int argc, char* argv[]) {
   return ret;
 #else
   QApplication a(argc, argv);
+
+  // init log
+  QString app_data_dir =
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  QString curr_time_str =
+      QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss");
+  QString log_dir = QString("%1/log").arg(app_data_dir);
+  QString log_path =
+      QString("%1/transcoder_server_%2.log").arg(log_dir).arg(curr_time_str);
+  QDir log_qdir(log_dir);
+  if (!log_qdir.exists()) {
+    log_qdir.mkpath(".");
+  }
+  TRANSCODER_BASE::InitLog(log_path.toStdString().c_str());
+  log_info << "transcoder_server start:";
+  QObject::connect(&a, &QApplication::aboutToQuit, []() {
+    // exit app
+    log_info << "transcoder_server about to quit!";
+  });
   if (QApplication::arguments().size() > 1) {
     auto server_name = QApplication::arguments()[1];
     a.connect(&ServerIpcService::GetInstance(),
@@ -75,6 +98,7 @@ TRANSCODER_API int Run(int argc, char* argv[]) {
     return 1;
   }
   auto ret = a.exec();
+  TRANSCODER_BASE::UnInitLog();
   return ret;
 #endif
 }

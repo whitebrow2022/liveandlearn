@@ -52,6 +52,9 @@ include_directories(${ffmpeg_root_dir}/include)
 link_directories(${ffmpeg_root_dir}/lib)
 link_directories(${x264_root_dir}/lib)
 
+# base log
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../transcoder_base/include)
+
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network LinguistTools REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network LinguistTools REQUIRED)
 
@@ -89,6 +92,7 @@ set_target_properties(${project_name} PROPERTIES
 )
 
 target_link_libraries(${project_name} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(${project_name} PRIVATE transcoder_base)
 
 if(WIN32)
   # ffmpeg libs

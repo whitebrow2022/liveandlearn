@@ -8,6 +8,8 @@
 
 #include <QMainWindow>
 
+#include <chrono>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class TranscoderClientFrame;
@@ -46,4 +48,5 @@ class TranscoderClientFrame : public QMainWindow {
 
   QString output_path_;
   QString last_input_file_;
+  std::chrono::time_point<std::chrono::high_resolution_clock> transcode_time_start_;
 };

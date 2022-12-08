@@ -127,6 +127,10 @@ if(APPLE)
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/libtranscoder_server.dylib ${app_bundle_frameworks_dir}/libtranscoder_server.dylib
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/libtranscoder_client.dylib ${app_bundle_frameworks_dir}/libtranscoder_client.dylib
     )
+  # copy dynamic loaded libs
+  add_custom_command(TARGET ${project_name} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/$<CONFIG>/libtranscoder_base.dylib ${app_bundle_frameworks_dir}/libtranscoder_base.dylib
+    )
   if (EXISTS ${QT_DEP_DIR})
     add_custom_command(TARGET ${project_name} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${QT_DEP_DIR}/lib/QtCore.framework "${app_bundle_frameworks_dir}/QtCore.framework"

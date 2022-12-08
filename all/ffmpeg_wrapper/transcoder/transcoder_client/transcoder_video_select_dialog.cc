@@ -16,9 +16,9 @@
 #include <QStandardPaths>
 #include <QUrl>
 
+#include "transcoder_base/log/log_writer.h"
 #include "ui_transcoder_video_select_dialog.h"
 #include "video_info_capture.h"
-
 
 namespace {
 QImage ConvertCvImageToQImage(const VideoInfoCapture::Image& cvimage,
@@ -123,8 +123,14 @@ void TranscoderVideoSelectDialog::OnInputFileChanged(const QString& inputfile) {
     return;
   }
   unsigned int duration;
+  auto time_start = std::chrono::high_resolution_clock::now();
   auto cvimage = VideoInfoCapture::ExtractVideoFirstValidFrameToImageBuffer(
       inputfile.toStdString().c_str(), &duration);
+  auto time_end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double, std::milli> elapsed = time_end - time_start;
+  log_info << "transcoder get " << inputfile.toStdString()
+           << " first frame, spend time: "
+           << static_cast<uint32_t>(elapsed.count()) << " ms";
   if (!cvimage) {
     return;
   }
@@ -135,12 +141,12 @@ void TranscoderVideoSelectDialog::OnInputFileChanged(const QString& inputfile) {
 
   if (cvimage) {
     const uint32_t dura_s = duration;
-    ui_->videoWidth->setValidator(
-        new QIntValidator(0, cvimage->GetWidth(), this));
-    ui_->videoHeight->setValidator(
-        new QIntValidator(0, cvimage->GetHeight(), this));
-    ui_->videoWidth->setText(QString("%1").arg(cvimage->GetWidth()));
-    ui_->videoHeight->setText(QString("%1").arg(cvimage->GetHeight()));
+    auto default_width = qMin(cvimage->GetWidth(), 1920);
+    auto default_height = qMin(cvimage->GetHeight(), 1080);
+    ui_->videoWidth->setValidator(new QIntValidator(0, default_width, this));
+    ui_->videoHeight->setValidator(new QIntValidator(0, default_height, this));
+    ui_->videoWidth->setText(QString("%1").arg(default_width));
+    ui_->videoHeight->setText(QString("%1").arg(default_height));
     ui_->videoStartTime->setValidator(new QDoubleValidator(0, dura_s, 1, this));
     ui_->videoRecordTime->setValidator(
         new QDoubleValidator(0, dura_s, 1, this));
