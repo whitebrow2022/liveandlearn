@@ -7,10 +7,10 @@
 #include <QApplication>
 #include <QDateTime>
 #include <QDebug>
+#include <QDir>
 #include <QSettings>
 #include <QStandardPaths>
 #include <QTranslator>
-#include <QDir>
 
 #include "server_ipc_service.h"
 #include "transcoder/transcoder_export.h"
@@ -89,7 +89,8 @@ TRANSCODER_API int Run(int argc, char* argv[]) {
               &ServerIpcService::TranscoderReady, []() {
                 QStringList ffmpeg_args = QApplication::arguments();
                 ffmpeg_args.removeAt(1);
-                qInfo() << "ffmpeg args: " << ffmpeg_args;
+                log_info << "ffmpeg args: "
+                         << ffmpeg_args.join(' ').toStdString();
                 ArgWrapper args(ffmpeg_args);
                 ffmpeg_main(args.argc, args.argv);
               });
