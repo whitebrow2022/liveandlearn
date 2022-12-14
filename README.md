@@ -6,6 +6,11 @@
    ```
    git clone https://github.com/group/repo.git --config core.autocrlf=true 
    ```
+2. 本地合并多个commit到一个commit. 在这个例子中，我们将压缩最后 3 次提交。 并且强制推送到远端。
+   ```bash
+   git reset --soft HEAD~3 && git commit
+   git push --force origin HEAD
+   ```
 
 ## python笔记
 
