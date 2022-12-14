@@ -1,5 +1,9 @@
 # liveandlearn
 
+## xcode笔记
+1. xcode调试Qt的QString
+   - 断点后，在lldb使用命令`print qstr.toStdString()`.
+
 ## git笔记
 
 1. windows端clone仓库时指定lf转crlf:
