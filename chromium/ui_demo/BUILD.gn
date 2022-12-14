@@ -1,0 +1,227 @@
+#
+import("//build/buildflag_header.gni")
+import("//build/config/compiler/compiler.gni")
+import("//build/config/features.gni")
+import("//build/config/freetype/freetype.gni")
+import("//build/config/sanitizers/sanitizers.gni")
+import("//gpu/vulkan/features.gni")
+import("//printing/buildflags/buildflags.gni")
+import("//testing/test.gni")
+import("//third_party/libgifcodec/libgifcodec.gni")
+import("//third_party/skia/gn/shared_sources.gni")
+import("//third_party/skia/third_party/skcms/skcms.gni")
+import("//tools/grit/grit_rule.gni")
+import("//skia/features.gni")
+
+declare_args() {
+  skia_use_angle = false
+  skia_use_vulkan = false
+  skia_use_metal = false
+  skia_use_direct3d = false
+}
+
+source_set("skia_utils") {
+  sources = skia_utils_sources
+  cflags_cc = [ 
+    "-Wno-extra-semi",
+    "-Wno-unreachable-code-return",
+    "-Wno-unreachable-code-break",
+  ]
+  deps = [ "//skia" ]
+}
+
+source_set("gpu_tool_utils") {
+  
+}
+
+source_set("tool_utils") {
+  deps = [ ":skia_utils" ]
+}
+
+# deps
+source_set("sk_app") {
+  public_deps = [
+    ":gpu_tool_utils",
+    "//skia",
+  ]
+  cflags = [ "-Wno-extra-semi" ]
+  cflags_cc = [ "-Wno-extra-semi" ]
+  sources = [
+    "//third_party/skia/tools/sk_app/Application.h",
+    "//third_party/skia/tools/sk_app/CommandSet.cpp",
+    "//third_party/skia/tools/sk_app/CommandSet.h",
+    "//third_party/skia/tools/sk_app/DisplayParams.h",
+    "//third_party/skia/tools/sk_app/RasterWindowContext.h",
+    "//third_party/skia/tools/sk_app/Window.cpp",
+    "//third_party/skia/tools/sk_app/Window.h",
+    "//third_party/skia/tools/sk_app/WindowContext.cpp",
+    "//third_party/skia/tools/sk_app/WindowContext.h",
+  ]
+  libs = []
+  frameworks = []
+  if (is_android) {
+    sources += [
+      "//third_party/skia/tools/sk_app/android/RasterWindowContext_android.cpp",
+      "//third_party/skia/tools/sk_app/android/WindowContextFactory_android.h",
+      "//third_party/skia/tools/sk_app/android/Window_android.cpp",
+      "//third_party/skia/tools/sk_app/android/Window_android.h",
+      "//third_party/skia/tools/sk_app/android/main_android.cpp",
+      "//third_party/skia/tools/sk_app/android/surface_glue_android.cpp",
+      "//third_party/skia/tools/sk_app/android/surface_glue_android.h",
+    ]
+    libs += [ "android" ]
+  } else if (is_linux) {
+    sources += [
+      "//third_party/skia/tools/sk_app/unix/RasterWindowContext_unix.cpp",
+      "//third_party/skia/tools/sk_app/unix/WindowContextFactory_unix.h",
+      "//third_party/skia/tools/sk_app/unix/Window_unix.cpp",
+      "//third_party/skia/tools/sk_app/unix/Window_unix.h",
+      "//third_party/skia/tools/sk_app/unix/keysym2ucs.c",
+      "//third_party/skia/tools/sk_app/unix/keysym2ucs.h",
+      "//third_party/skia/tools/sk_app/unix/main_unix.cpp",
+    ]
+    libs += [
+      "GL",  # Used by raster window context, so cannot be behind skia_use_gl.
+      "X11",
+    ]
+  } else if (is_win) {
+    sources += [
+      "//third_party/skia/tools/sk_app/win/RasterWindowContext_win.cpp",
+      "//third_party/skia/tools/sk_app/win/WindowContextFactory_win.h",
+      "//third_party/skia/tools/sk_app/win/Window_win.cpp",
+      "//third_party/skia/tools/sk_app/win/Window_win.h",
+      "//third_party/skia/tools/sk_app/win/main_win.cpp",
+    ]
+    libs += [
+      "opengl32.lib",
+    ]
+  } else if (is_mac) {
+    sources += [
+      "//third_party/skia/tools/sk_app/mac/WindowContextFactory_mac.h",
+      "//third_party/skia/tools/sk_app/mac/Window_mac.h",
+      "//third_party/skia/tools/sk_app/mac/Window_mac.mm",
+      "//third_party/skia/tools/sk_app/mac/main_mac.mm",
+    ]
+    frameworks += [
+      "QuartzCore.framework",
+      "Cocoa.framework",
+      "Foundation.framework",
+    ]
+  } else if (is_ios) {
+    sources += [
+      "//third_party/skia/tools/sk_app/ios/WindowContextFactory_ios.h",
+      "//third_party/skia/tools/sk_app/ios/Window_ios.h",
+      "//third_party/skia/tools/sk_app/ios/Window_ios.mm",
+      "//third_party/skia/tools/sk_app/ios/main_ios.mm",
+    ]
+    frameworks += [ "QuartzCore.framework" ]
+  }
+  if (skia_use_gl) {
+    sources += [ "//third_party/skia/tools/sk_app/GLWindowContext.cpp" ]
+    sources += [ "//third_party/skia/tools/sk_app/GLWindowContext.h" ]
+    if (is_android) {
+      sources += [ "//third_party/skia/tools/sk_app/android/GLWindowContext_android.cpp" ]
+    } else if (is_linux) {
+      sources += [ "//third_party/skia/tools/sk_app/unix/GLWindowContext_unix.cpp" ]
+    } else if (is_win) {
+      sources += [ "//third_party/skia/tools/sk_app/win/GLWindowContext_win.cpp" ]
+      if (skia_use_angle) {
+        sources += [ "//third_party/skia/tools/sk_app/win/ANGLEWindowContext_win.cpp" ]
+      }
+    } else if (is_mac) {
+      sources += [
+        "//third_party/skia/tools/sk_app/mac/GLWindowContext_mac.mm",
+        "//third_party/skia/tools/sk_app/mac/RasterWindowContext_mac.mm",
+      ]
+    } else if (is_ios) {
+      sources += [
+        "//third_party/skia/tools/sk_app/ios/GLWindowContext_ios.mm",
+        "//third_party/skia/tools/sk_app/ios/RasterWindowContext_ios.mm",
+      ]
+    }
+  }
+  if (skia_use_vulkan) {
+    sources += [ "//third_party/skia/tools/sk_app/VulkanWindowContext.cpp" ]
+    sources += [ "//third_party/skia/tools/sk_app/VulkanWindowContext.h" ]
+    if (is_android) {
+      sources += [ "//third_party/skia/tools/sk_app/android/VulkanWindowContext_android.cpp" ]
+    } else if (is_linux) {
+      sources += [ "//third_party/skia/tools/sk_app/unix/VulkanWindowContext_unix.cpp" ]
+      libs += [ "X11-xcb" ]
+    } else if (is_win) {
+      sources += [ "//third_party/skia/tools/sk_app/win/VulkanWindowContext_win.cpp" ]
+    }
+  }
+  if (skia_use_metal) {
+    sources += [ "//third_party/skia/tools/sk_app/MetalWindowContext.mm" ]
+    sources += [ "//third_party/skia/tools/sk_app/MetalWindowContext.h" ]
+    if (skia_enable_graphite) {
+      sources += [ "//third_party/skia/tools/sk_app/GraphiteMetalWindowContext.mm" ]
+      sources += [ "//third_party/skia/tools/sk_app/GraphiteMetalWindowContext.h" ]
+    }
+    if (is_mac) {
+      sources += [ "//third_party/skia/tools/sk_app/mac/MetalWindowContext_mac.mm" ]
+      if (skia_enable_graphite) {
+        sources += [ "//third_party/skia/tools/sk_app/mac/GraphiteMetalWindowContext_mac.mm" ]
+      }
+    } else if (is_ios) {
+      sources += [ "//third_party/skia/tools/sk_app/ios/MetalWindowContext_ios.mm" ]
+    }
+  }
+  if (skia_use_direct3d) {
+    sources += [ "//third_party/skia/tools/sk_app/win/D3D12WindowContext_win.cpp" ]
+  }
+  #if (skia_use_dawn) {
+  #  sources += [ "//third_party/skia/tools/sk_app/DawnWindowContext.cpp" ]
+  #  sources += [ "//third_party/skia/tools/sk_app/DawnWindowContext.h" ]
+  #  if (is_linux) {
+  #    if (dawn_enable_vulkan) {
+  #      sources += [ "//third_party/skia/tools/sk_app/unix/DawnVulkanWindowContext_unix.cpp" ]
+  #      defines = [ "VK_USE_PLATFORM_XCB_KHR" ]
+  #      libs += [ "X11-xcb" ]
+  #    }
+  #  } else if (is_win) {
+  #    if (dawn_enable_d3d12) {
+  #      sources += [ "//third_party/skia/tools/sk_app/win/DawnD3D12WindowContext_win.cpp" ]
+  #    }
+  #  } else if (is_mac) {
+  #    if (dawn_enable_metal) {
+  #      sources += [ "//third_party/skia/tools/sk_app/mac/DawnMTLWindowContext_mac.mm" ]
+  #    }
+  #  }
+  #}
+  deps = [ ":tool_utils" ]
+  if (is_android) {
+    deps += [ "//third_party/native_app_glue" ]
+  }
+  if (skia_use_gl && skia_use_angle) {
+    deps += [ "//third_party/angle2" ]
+  }
+}
+
+executable("ui_demo") {
+  sources = [
+    "ui_demo.cc",
+    "hello_skia.cc",
+    "hello_skia.h",
+  ]
+  cflags_cc = [ "-Wno-error" ]
+  cflags = [ "-Wno-extra-semi" ]
+  deps = [
+    "//base",
+    "//build:branding_buildflags",
+    "//build/win:default_exe_manifest",
+    "//skia",
+    "//url",
+    ":sk_app",
+  ]
+
+  if (is_win) {
+    configs += [ "//build/config/win:windowed" ]
+    configs -= [ "//build/config/win:console" ]
+  }
+
+  if (is_mac) {
+    deps += [ "//sandbox/mac:seatbelt" ]
+  }
+}

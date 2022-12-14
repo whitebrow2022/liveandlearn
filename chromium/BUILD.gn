@@ -2,5 +2,6 @@
 group("chromium_test") {
   public_deps = [
     "//liveandlearn/chromium/base_demo:base_demo",
+    "//liveandlearn/chromium/ui_demo:ui_demo",
   ]
 }
