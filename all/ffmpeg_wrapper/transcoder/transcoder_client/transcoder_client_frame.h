@@ -9,7 +9,6 @@
 #include <QMainWindow>
 #include <chrono>  // NOLINT
 
-
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class TranscoderClientFrame;
@@ -31,6 +30,7 @@ class TranscoderClientFrame : public QMainWindow {
 
  private slots:
   void OnTranscode();
+  void OnVideoInfo();
   void Exit();
   void About();
   void OnClickedAndSend();

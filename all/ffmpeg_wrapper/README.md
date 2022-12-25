@@ -4,6 +4,14 @@
 
 ### msvc编译
 
+#### x86编译
+1. 需要安装git(bash脚本运行在git bash环境)
+2. 下载ffmpeg和x264: `./third_party/download_ffmpeg.sh`
+3. 清除旧的编译缓冲：`./third_party/clean_ffmpeg.sh`
+4. `./third_party/build_ffmpeg_win_x86.sh`
+5. 编译依赖于ffmpeg的app
+
+#### 旧的编译方式
 1. 安装msys2: 
    - [msys2](https://www.msys2.org)
    - 安装必须的工具 `pacman -S make pkgconf diffutils`
@@ -55,6 +63,13 @@
 ### mac编译
 
 1. 安装pkg-config: `brew install pkg-config`
+
+#### x64编译
+1. 需要安装git
+2. 下载ffmpeg和x264: `./third_party/download_ffmpeg.sh`
+3. 清除旧的编译缓冲：`./third_party/clean_ffmpeg.sh`
+4. `./third_party/build_ffmpeg_mac_x64.sh`
+5. 编译依赖于ffmpeg的app
 
 ### ffmpeg转码流程
 

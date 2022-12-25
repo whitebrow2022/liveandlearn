@@ -73,4 +73,17 @@ class VideoInfoCapture {
     std::unordered_map<int, int64_t> video_stream_bitrates;
   };
   static FileInfo ExtractFileInfo(const char* src_filename);
+
+  struct VideoInfo {
+    std::string thumb_image_path;
+    int thumb_image_width{0};
+    int thumb_image_height{0};
+    int thumb_image_size{0};
+    std::string video_path;
+    int video_duration{0}; // msec
+    int video_width{0};
+    int video_height{0};
+    int video_size{0};
+  };
+  static bool ExtractVideInfo(const char* src_file_path, VideoInfo* video_info = nullptr);
 };

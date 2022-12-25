@@ -18,6 +18,7 @@
 #include "client_ipc_service.h"
 #include "server_driver.h"
 #include "transcoder_base/log/log_writer.h"
+#include "transcoder_video_info_dialog.h"
 #include "transcoder_video_select_dialog.h"
 #include "ui_transcoder_client_frame.h"
 
@@ -28,6 +29,8 @@ TranscoderClientFrame::TranscoderClientFrame(QWidget* parent)
   ui_->setupUi(this);
   connect(ui_->actionTranscode, &QAction::triggered, this,
           &TranscoderClientFrame::OnTranscode);
+  connect(ui_->actionVideoInfo, &QAction::triggered, this,
+          &TranscoderClientFrame::OnVideoInfo);
   connect(ui_->actionExit, &QAction::triggered, this,
           &TranscoderClientFrame::Exit);
   connect(ui_->actionAbout, &QAction::triggered, this,
@@ -116,6 +119,13 @@ void TranscoderClientFrame::OnTranscode() {
   ui_->inputEdit->setText(ffmpeg_param);
 
   OnClickedAndSend();
+}
+
+void TranscoderClientFrame::OnVideoInfo() {
+  TranscoderVideoInfoDialog video_info_dlg(this);
+  if (video_info_dlg.exec() == 0) {
+    return;
+  }
 }
 
 void TranscoderClientFrame::Exit() { QCoreApplication::quit(); }
