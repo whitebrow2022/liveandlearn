@@ -12,6 +12,7 @@
 		BDD5F97129667AF700BFE3B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BDD5F97029667AF700BFE3B8 /* Assets.xcassets */; };
 		BDD5F97429667AF700BFE3B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BDD5F97229667AF700BFE3B8 /* Main.storyboard */; };
 		BDD5F97629667AF700BFE3B8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD5F97529667AF700BFE3B8 /* main.m */; };
+		BDD5F97F296E7E2200BFE3B8 /* PoppedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD5F97D296E7E2200BFE3B8 /* PoppedViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,8 @@
 		BDD5F97329667AF700BFE3B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BDD5F97529667AF700BFE3B8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BDD5F97729667AF700BFE3B8 /* MacChildWindow.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacChildWindow.entitlements; sourceTree = "<group>"; };
+		BDD5F97D296E7E2200BFE3B8 /* PoppedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PoppedViewController.m; sourceTree = "<group>"; };
+		BDD5F97E296E7E2200BFE3B8 /* PoppedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoppedViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			children = (
 				BDD5F96A29667AF600BFE3B8 /* AppDelegate.h */,
 				BDD5F96B29667AF600BFE3B8 /* AppDelegate.m */,
+				BDD5F97E296E7E2200BFE3B8 /* PoppedViewController.h */,
+				BDD5F97D296E7E2200BFE3B8 /* PoppedViewController.m */,
 				BDD5F96D29667AF600BFE3B8 /* ViewController.h */,
 				BDD5F96E29667AF600BFE3B8 /* ViewController.m */,
 				BDD5F97029667AF700BFE3B8 /* Assets.xcassets */,
@@ -137,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDD5F97F296E7E2200BFE3B8 /* PoppedViewController.m in Sources */,
 				BDD5F96F29667AF600BFE3B8 /* ViewController.m in Sources */,
 				BDD5F97629667AF700BFE3B8 /* main.m in Sources */,
 				BDD5F96C29667AF600BFE3B8 /* AppDelegate.m in Sources */,

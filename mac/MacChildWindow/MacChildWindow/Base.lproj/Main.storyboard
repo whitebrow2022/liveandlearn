@@ -720,6 +720,17 @@
                                     <action selector="popButtonAction:" target="XfG-lQ-9wD" id="Wr4-hi-yeE"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jEb-NP-MfG">
+                                <rect key="frame" x="200" y="76" width="84" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="TestPop" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YJY-kS-Y44">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="testPopButtonAction:" target="XfG-lQ-9wD" id="MMy-fz-nzg"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                 </viewController>
