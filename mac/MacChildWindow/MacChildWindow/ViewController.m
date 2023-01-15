@@ -5,8 +5,43 @@
 //  Created by 刘秀峰(Whitebrow.L) on 2023/1/5.
 //
 
+#include <AppKit/AppKit.h>
 #import "ViewController.h"
 #import "PoppedViewController.h"
+
+#import <objc/objc.h>
+#import <objc/runtime.h>
+
+@interface NSWindow (FullScreenProperty)
+@property(readonly) BOOL qt_fullScreen;
+@end
+
+@implementation NSWindow (FullScreenProperty)
+
++ (void)load
+{
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserverForName:NSWindowDidEnterFullScreenNotification object:nil queue:nil
+                    usingBlock:^(NSNotification *notification) {
+        objc_setAssociatedObject(notification.object, @selector(qt_fullScreen),
+                                 @(YES), OBJC_ASSOCIATION_RETAIN);
+    }
+    ];
+    [center addObserverForName:NSWindowDidExitFullScreenNotification object:nil queue:nil
+                    usingBlock:^(NSNotification *notification) {
+        objc_setAssociatedObject(notification.object, @selector(qt_fullScreen),
+                                 nil, OBJC_ASSOCIATION_RETAIN);
+    }
+    ];
+}
+
+- (BOOL)qt_fullScreen
+{
+    NSNumber *number = objc_getAssociatedObject(self, @selector(qt_fullScreen));
+    return [number boolValue];
+}
+@end
+
 
 @interface ViewController()
 
@@ -48,6 +83,17 @@
 }
 
 - (IBAction)testPopButtonAction:(id)sender {
+    
+    if ([NSApp isMemberOfClass:[NSApplication class]]) {
+        NSLog(@"This is a NSApplication");
+    }
+    
+    if (self.view.window.qt_fullScreen) {
+        NSLog(@"main window is fullscreen mode");
+    } else {
+        NSLog(@"main window is window mode ");
+    }
+    
     if (!self.testPopedWindow) {
         NSRect frame = self.view.window.frame;
         frame = CGRectInset(frame, 20, 20);
