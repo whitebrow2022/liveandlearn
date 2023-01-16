@@ -7,6 +7,9 @@
 #include "qt_child_window_frame.h"
 
 #include <QMessageBox>
+#include <QPushButton>
+#include <QTimer>
+#include <QVBoxLayout>
 
 #include "qt_window_util.h"
 #include "ui_qt_child_window_frame.h"
@@ -25,20 +28,21 @@ QtChildWindowFrame::QtChildWindowFrame(QWidget *parent)
 QtChildWindowFrame::~QtChildWindowFrame() { delete ui_; }
 
 void QtChildWindowFrame::OnCreate() {
-  QMessageBox msgBox;
-#if defined(Q_OS_MACOS)
-  msgBox.setText("Message box about swiping up with three fingers");
-  msgBox.setInformativeText(
-      "Solve the problem that the parent and child windows are separated by "
-      "sliding up with three fingers on the mac system");
-#else
-  msgBox.setText("QMessageBox");
-  msgBox.setInformativeText("More information");
-#endif
-  msgBox.setStandardButtons(QMessageBox::Ok);
-  QtWindowUtil::AttachChildToParent(this, &msgBox);
-  int ret = msgBox.exec();
-  QtWindowUtil::DetachChildFromParent(this, &msgBox);
+  if (popped_) {
+    popped_ = new QWidget();
+    QVBoxLayout *main_layout = new QVBoxLayout(popped_);
+    QPushButton *closeBtn = new QPushButton(popped_);
+    closeBtn->setText("close");
+    main_layout->addWidget(closeBtn);
+    connect(closeBtn, &QPushButton::clicked, popped_, &QWidget::close);
+    popped_->setFixedSize({200, 100});
+    popped_->setObjectName("popped");
+    popped_->setStyleSheet(QString("QWidget#popped{ background-color: red; }"));
+
+    popped_->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint |
+                            Qt::NoDropShadowWindowHint);  // 无边框
+  }
+  QTimer::singleShot(5000, [this]() { popped_->show(); });
 }
 
 void QtChildWindowFrame::Exit() { QCoreApplication::quit(); }

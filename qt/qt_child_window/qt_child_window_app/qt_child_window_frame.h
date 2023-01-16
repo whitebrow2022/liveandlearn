@@ -28,4 +28,5 @@ class QtChildWindowFrame : public QMainWindow {
 
  private:
   Ui::QtChildWindowFrame *ui_;
+  QWidget *popped_;
 };
