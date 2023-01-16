@@ -6,7 +6,7 @@ bash_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 echo "generate qt macos project ..."
 
-qt_osx_path="/Users/xiufeng.liu/Qt/5.15.2/clang_64"
+qt_osx_path="${HOME}/Qt/5.15.2/clang_64"
 qt_osx_dir="$bash_dir/../build/mac_x64/client"
 cmake -S "$bash_dir" -B "$qt_osx_dir" -G "Xcode" -DCMAKE_OSX_ARCHITECTURES=x86_64 -DCMAKE_PREFIX_PATH=${qt_osx_path}
 

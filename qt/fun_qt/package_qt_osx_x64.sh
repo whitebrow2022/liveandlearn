@@ -1,12 +1,27 @@
 #!/bin/bash
 #
-# Generate 'macOS' project for Transcoder.
+# package 'macOS' project for fun_qt_app.
 
 bash_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-echo "generate qt macos project ..."
+echo "package qt macos project ..."
 
-qt_osx_path="${HOME}/Qt/5.15.2/clang_64"
+qt_lts_dir=${QT_DIR}
+if [ -d ${qt_lts_dir} ]; then
+  echo "qt env is ${qt_lts_dir}"
+else
+  qt_lts_dir=${QTDIR}
+  if [ -d ${qt_lts_dir} ] 
+  then
+    echo "qt env is ${qt_lts_dir}"
+  else
+    echo "need set QT_DIR or QTDIR env"
+    exit 0
+  fi
+fi
+
+
+qt_osx_path="${qt_lts_dir}"
 qt_osx_package_dir="${bash_dir}/package"
 qt_osx_dir="${qt_osx_package_dir}/mac_x64"
 
@@ -15,7 +30,7 @@ cmake -S "$bash_dir" -B "$qt_osx_dir" -G "Xcode" -DCMAKE_OSX_ARCHITECTURES=x86_6
 # build
 cmake --build "$qt_osx_dir" -v --config Release
 # codesign
-codesign --deep --force --sign - "${qt_osx_dir}/bin/Release/transcoder_app.app"
+codesign --deep --force --sign - "${qt_osx_dir}/bin/Release/fun_qt_app.app"
 # package
 # cpack -G DragNDrop -C Release -B "${qt_osx_package_dir}" --config "$qt_osx_dir/CPackConfig.cmake" --verbose
 cpack -G DragNDrop -C Release -B "${qt_osx_package_dir}" --config "$qt_osx_dir/CPackConfig.cmake"
