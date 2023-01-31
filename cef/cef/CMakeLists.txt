@@ -28,6 +28,9 @@ if(APPLE)
   set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
 endif()
 
+# -Wno-everything
+# [-Werror,-Woverriding-t-option]
+add_compile_options("$<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-overriding-t-option>")
 
 add_subdirectory(${cef_sdk_dir} cef_prebuilt)
 set_target_properties(cef_gtest PROPERTIES FOLDER "cef")
