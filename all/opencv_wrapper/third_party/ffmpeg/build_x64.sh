@@ -24,6 +24,9 @@ source ${bash_dir}/vs_env.sh
 # 3.安装工具链: nasm
 nasm_path=${bash_dir}/../../../../tools/nasm/win64
 export PATH=${PATH}:${nasm_path}
+# 
+other_tools_path=${bash_dir}/../../../../tools/win
+export PATH=${PATH}:${other_tools_path}
 
 # 4.构建
 cd ${bash_dir}/../externals/ffmpeg

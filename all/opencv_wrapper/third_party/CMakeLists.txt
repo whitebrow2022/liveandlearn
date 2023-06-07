@@ -61,4 +61,4 @@ if(IOS)
   # target_compile_options(external PRIVATE -Wno-shorten-64-to-32)
 endif()
 
-add_subdirectory(src/opencv)
+add_subdirectory(externals/opencv)
